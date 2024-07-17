@@ -1,0 +1,85 @@
+groups:
+  - name: Container CPU For Dr Allen Server
+    rules:
+    
+    - alert: Zookeeper Container Cpu High
+      # expr: rate(container_cpu_usage_seconds_total{instance="10.0.0.55:11092",name="redis-server"}[1m])
+      expr: 100 * (1 - rate(container_cpu_usage_seconds_total{instance="10.0.0.55:11092",name="zookeeper-isofh"}[5m])) > 80
+      for: 1m
+      labels:
+        severity: critical
+        app_type: dr-allen-cpu
+        category: cpu
+      annotations:
+        summary: "CPU of ZOOKEEPER container is high on {{$labels.instance}}"
+        description: |
+          HUY NG
+          CPU of ZOOKEEPER container is high for more than 1 minutes
+
+    - alert: Frontend Quanlybackup Container Cpu High
+      # expr: rate(container_cpu_usage_seconds_total{instance="10.0.0.55:11092",name="redis-server"}[1m])
+      expr: 100 * (1 - rate(container_cpu_usage_seconds_total{instance="10.0.0.55:11092",name="kafka-ui-isofh"}[5m])) > 80
+      for: 1m
+      labels:
+        severity: critical
+        app_type: dr-allen-cpu
+        category: cpu
+      annotations:
+        summary: "CPU of FE QLBACKUP container is high on {{$labels.instance}}"
+        description: |
+          HUY NG
+          CPU of FE QLBACKUP container is high for more than 1 minutes
+
+    - alert: Golang App Container Cpu High
+      # expr: rate(container_cpu_usage_seconds_total{instance="10.0.0.55:11092",name="redis-server"}[1m])
+      expr: 100 * (1 - rate(container_cpu_usage_seconds_total{instance="10.0.0.55:11092",name="golang-app"}[5m])) > 80
+      for: 1m
+      labels:
+        severity: critical
+        app_type: dr-allen-cpu-go
+        category: cpu
+      annotations:
+        summary: "CPU of GO APP container is high on {{$labels.instance}}"
+        description: |
+          HUY NG
+          CPU of GO APP container is high for more than 1 minutes
+
+    - alert: searching-service Container Cpu High
+      # expr: rate(container_cpu_usage_seconds_total{instance="10.0.0.55:11092",name="redis-server"}[1m])
+      expr: 100 * (1 - rate(container_cpu_usage_seconds_total{instance="10.0.0.55:11092",name="searching-service"}[5m])) > 80
+      for: 1m
+      labels:
+        severity: critical
+        app_type: dr-allen-cpu
+        category: cpu
+      annotations:
+        summary: "CPU of SEARCHING container is high on {{$labels.instance}}"
+        description: |
+          HUY NG
+          CPU of SEARCHING container is high for more than 1 minutes
+
+    - alert: disk-partition-service Container Cpu High
+      # expr: rate(container_cpu_usage_seconds_total{instance="10.0.0.55:11092",name="redis-server"}[1m])
+      expr: 100 * (1 - rate(container_cpu_usage_seconds_total{instance="10.0.0.55:11092",name="flamboyant_dubinsky"}[5m])) > 80
+      for: 1m
+      labels:
+        severity: critical
+        app_type: dr-allen-cpu
+        category: cpu
+      annotations:
+        summary: "CPU of DISK PARTITION container is high on {{$labels.instance}}"
+        description: |
+          HUY NG
+          CPU of DISK PARTITION container is high for more than 1 minutes
+
+    - alert: Redis Container Cpu High
+      expr: rate(container_cpu_usage_seconds_total{name="redis-server"}[1m]) 
+      for: 1m
+      labels:
+        severity: critical
+        app_type: dr-allen-cpu
+      annotations:
+        summary: "CPU of REDIS container is high on {{ $labels.instance }}"
+        description: |
+          HUY NG
+          CPU of REDIS container is high for more than 1 minutes

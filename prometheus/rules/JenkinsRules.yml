@@ -1,0 +1,19 @@
+groups:
+  - name: jenkins-rules
+    rules:
+    - alert: Memory Usage Above 75%
+      expr: (node_memory_MemTotal_bytes{job="Mediplus", instance=~".+"} - node_memory_MemFree_bytes{job="Mediplus", instance=~".+"} - node_memory_Buffers_bytes{job="Mediplus", instance=~".+"} - node_memory_Cached_bytes{job="Mediplus", instance=~".+"}) / (node_memory_MemTotal_bytes{job="Mediplus", instance=~".+"}) * 100 >= 1
+      for: 1m
+      labels:
+        severity: critical
+        app_type: jenkins
+        category: memory
+      annotations:
+        summary: "Memory usage is very HIGH - above 75% - 25% left"
+        description: |
+          "HUY ALERT"
+          "Node memory for instance {{ $labels.instance }} has reached {{ $value }}%"
+          RAM Memory is used {{ printf "%.2f" $value }}%.
+          * Used : {{ query "node_memory_MemTotal_bytes{job='Mediplus', instance=~'.+'} - node_memory_MemFree_bytes{job='Mediplus', instance=~'.+'} - node_memory_Buffers_bytes{job='Mediplus', instance=~'.+'} - node_memory_Cached_bytes{job='Mediplus', instance=~'.+'}" | first | value | humanize }}
+          * Left : {{ query "node_memory_MemFree_bytes{job='Mediplus', instance=~'.+'}" | first | value | humanize }}
+          * Total : {{ query "node_memory_MemTotal_bytes{job='Mediplus', instance=~'.+'}" | first | value | humanize  }}

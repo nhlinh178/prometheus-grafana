@@ -1,0 +1,16 @@
+groups:
+  - name: Redis
+    rules:
+
+    - alert: Redis Container Cpu High
+      expr: rate(container_cpu_usage_seconds_total{instance="10.0.0.55:11092",name="redis-server"}[1m])
+      for: 1m
+      labels:
+        severity: critical
+        app_type: redis
+        category: cpu
+      annotations:
+        summary: "CPU of Redis container is high on {{$labels.instance}}"
+        description: |
+          HUY NG
+          CPU of Redis container is high for more than 1 minutes

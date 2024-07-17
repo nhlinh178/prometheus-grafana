@@ -1,0 +1,25 @@
+{{if eq .Status "resolved"}}
+✅💙PHỤC HỒI💙✅
+------------------------------------------------------
+Nội dung: {{.CommonAnnotations.summary}}
+Nhóm Cảnh báo: {{ .CommonLabels.alertname }}
+Máy Chủ: {{ .CommonLabels.instance }}
+Status:  {{ .Status  | str_UpperCase}}
+------------------------------------------------------
+{{end -}}
+
+{{if eq .Status "firing"}}
+🔥🚨CẢNH BÁO SỰ CỐ🚨🔥
+------------------------------------------------------
+Nội dung: {{.CommonAnnotations.summary}}
+Nhóm Cảnh báo: {{ .CommonLabels.alertname }}
+Hệ thống viện: <code> {{ .CommonLabels.app_type }} </code>
+Máy Chủ: {{ .CommonLabels.instance }}
+Thông tin: {{.CommonAnnotations.description}}
+Mức Độ:  <code> 🔥 {{ .CommonLabels.severity | str_UpperCase }} 🔥 </code>
+
+------------------------------------------------------
+{{- range $val := .Alerts }}
+THỜI GIAN XẢY RA: <code>{{ $val.StartsAt | str_FormatDate }}</code>
+{{- end -}}
+{{end }}

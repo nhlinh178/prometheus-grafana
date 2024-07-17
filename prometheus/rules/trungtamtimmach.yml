@@ -1,0 +1,111 @@
+groups:
+  - name: Trung Tâm Tim Mạch-Rules
+    rules:
+      # Node Down
+      - alert: Cảnh Báo Server
+        expr:  up{job="Trung-Tam-Tim-Mach",instance=~".+"} == 0
+        for: 1m
+        labels:
+          severity: Khẩn cấp
+          app_type: Trung Tâm Tim Mạch
+          category: server
+          instance: "{{ $labels.instance }}"
+        annotations:
+          summary: "Server bị tắt"
+          description: | 
+                Vui lòng kiểm tra lại service giám sát trên server, kiểm lại VPN site to site hoặc kiểm tra server có bị tắt hay không ?
+
+      # Ram Rules
+      - alert: Cảnh báo RAM
+        expr: (node_memory_MemTotal_bytes{job="Trung-Tam-Tim-Mach", instance=~".+"} - node_memory_MemFree_bytes{job="Trung-Tam-Tim-Mach", instance=~".+"} - node_memory_Buffers_bytes{job="Trung-Tam-Tim-Mach", instance=~".+"} - node_memory_Cached_bytes{job="Trung-Tam-Tim-Mach", instance=~".+"} ) / (node_memory_MemTotal_bytes{job="Trung-Tam-Tim-Mach", instance=~".+"}) * 100 > 96
+        for: 1m
+        labels:
+          severity: Khẩn cấp
+          app_type: Trung Tâm Tim Mạch
+          category: memory
+          instance: "{{ $labels.instance }}"
+        annotations:
+          summary: "RAM Server > 95%"
+          description: |
+            RAM đã sử dụng chiếm {{ printf "%.2f" $value }}% / 100%
+
+            Thông Tin Cụ Thể:
+
+                 * TOTAL RAM: {{ query (printf "node_memory_MemTotal_bytes{job='Trung-Tam-Tim-Mach', instance=~'%s'}" $labels.instance) | first | value  | humanize1024}}
+
+                 * Ram sử dụng: {{ query (printf "node_memory_MemTotal_bytes{job='Trung-Tam-Tim-Mach', instance=~'%s'} - node_memory_MemFree_bytes{job='Trung-Tam-Tim-Mach', instance=~'%s'} - node_memory_Cached_bytes{job='Trung-Tam-Tim-Mach', instance=~'%s'} - node_memory_Buffers_bytes{job='Trung-Tam-Tim-Mach', instance=~'%s'}" $labels.instance $labels.instance $labels.instance $labels.instance) | first | value | humanize1024 }}
+                                   
+                 * Ram Cache/buffe: {{ query (printf "node_memory_Cached_bytes{job='Trung-Tam-Tim-Mach', instance=~'%s'} + node_memory_Buffers_bytes{job='Trung-Tam-Tim-Mach', instance=~'%s'}" $labels.instance $labels.instance) | first | value  | humanize1024}}
+
+                 * Ram còn lại:  {{ query (printf "node_memory_MemFree_bytes{job='Trung-Tam-Tim-Mach', instance=~'%s'}" $labels.instance) | first | value | humanize1024 }}
+
+      # CPU Rules
+      - alert: CPU Tăng cao
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{job="Trung-Tam-Tim-Mach", instance=~".+",mode="idle"}[1m])) * 100) > 96
+        for: 1m
+        labels:
+          severity: Khẩn cấp
+          app_type: Trung Tâm Tim Mạch
+          category: cpu
+          instance: "{{ $labels.instance }}"
+        annotations:
+          summary: "CPU Server > 95%"
+          description: | 
+            CPU máy chủ sử dụng đạt tới  {{ printf "%.2f" $value }}% / 100%
+
+      # Disk Rules
+      - alert: Dung lượng DISK
+        expr: (100 - ((node_filesystem_free_bytes{instance=~".+",job="Trung-Tam-Tim-Mach",mountpoint=~".+"}) / (node_filesystem_size_bytes{instance=~".+",job="Trung-Tam-Tim-Mach",mountpoint=~".+"}))* 100) > 95
+        for: 72h
+        labels:
+          severity: Khẩn cấp
+          app_type: Trung Tâm Tim Mạch
+          category: disk
+        annotations:
+          summary: "Ổ CỨNG SẮP ĐẦY"
+          description: | 
+          
+              Dung lượng {{ $labels.device }} mount vào thư mục {{ $labels.mountpoint }} đã đạt tới {{ printf "%.2f" $value }}% / 100%
+
+              Thông Tin Cụ Thể:
+
+                  * TOTAL DISK:  {{ query (printf "node_filesystem_size_bytes{job='Trung-Tam-Tim-Mach', instance=~'%s', mountpoint=~'%s'}" $labels.instance $labels.mountpoint) | first | value | humanize1024}}
+
+                  * KL Đã dùng:  {{ query (printf "node_filesystem_size_bytes{job='Trung-Tam-Tim-Mach', instance=~'%s', mountpoint=~'%s'} - node_filesystem_free_bytes{job='Trung-Tam-Tim-Mach', instance=~'%s', mountpoint=~'%s'}" $labels.instance $labels.mountpoint $labels.instance $labels.mountpoint) | first | value | humanize1024}}
+
+                  * KL Còn lại:  {{ query (printf "node_filesystem_free_bytes{job='Trung-Tam-Tim-Mach', instance=~'%s', mountpoint=~'%s'}" $labels.instance $labels.mountpoint) | first | value | humanize1024}}
+
+              Vào fix đi anh em !
+
+
+      # Lock databases
+      - alert: Lock tables Databases
+        expr: pg_locks_count{instance='192.168.1.224',datname='sakura_stable_23_08_22'} != 0
+        for: 1m
+        labels:
+          severity: Khẩn cấp
+          app_type: Trung Tâm Tim Mạch
+          category: databases
+          instance: "{{ $labels.instance }}"
+        annotations:
+          summary: "Có lock databases"
+          description: | 
+            Lock rồi anh em
+            DATABASE : {{ $labels.datname }}
+            MODEL : {{ $labels.mode }}
+
+      # Deadlock / conflict
+      - alert: Lock tables Databases
+        expr: pg_stat_database_deadlocks{instance='192.168.1.224',datname='sakura_stable_23_08_22'} != 0
+        for: 1m
+        labels:
+          severity: Khẩn cấp
+          app_type: Trung Tâm Tim Mạch
+          category: databases
+          instance: "{{ $labels.instance }}"
+        annotations:
+          summary: "Deadlock"
+          description: | 
+            
+            CÓ DEAD LOCK TẠI
+            DATABASE : {{ $labels.datname }}

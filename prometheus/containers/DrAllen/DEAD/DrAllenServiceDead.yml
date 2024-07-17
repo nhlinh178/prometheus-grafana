@@ -1,0 +1,76 @@
+groups:
+  - name: Service Die or Container Shutdown For Dr Allen Server
+    rules:
+
+    - alert: Redis Container Tắt
+      # expr: container_memory_usage_bytes{name="redis-server"} < 1.5e+10
+      expr: absent(container_last_seen{name="redis-server",instance="10.0.0.55:11092"}) == 1
+      for: 1m
+      labels:
+        severity: KHẨN
+        app_type: dr allen service dead
+        category: service
+      annotations:
+        summary: "REDIS container đã TẮT tại : [ {{ $labels.instance }} ]"
+        description: |
+          REDIS CONTAINER HIỆN TẠI ĐANG TẮT........
+        timestamp: "Thời gian bắt đầu xảy ra {{ $value }}"
+
+    - alert: Frontend Quản lý máy chủ Container Tắt
+      expr: absent(container_last_seen{name="frontend_quanlybackup_dev",instance="10.0.0.55:11092"}) == 1
+      for: 1m
+      labels:
+        severity: KHẨN
+        app_type: dr allen service dead
+        category: service
+      annotations:
+        summary: "FRONTEND QUẢN LÝ MÁY CHỦ container đã TẮT tại : [ {{ $labels.instance }} ]"
+        description: |
+          FRONTEND QUẢN LÝ MÁY CHỦ CONTAINER HIỆN TẠI ĐANG TẮT........
+        timestamp: "Thời gian bắt đầu xảy ra {{ $value }}"
+
+
+    - alert: Container Tắt
+      expr: container_memory_usage_bytes{name!=""} == 0
+      for: 0m
+      labels:
+        severity: KHẨN
+        category: service
+        app_type: test service dead
+      annotations:
+        summary: "Container đã TẮT tại: [{{ $labels.instance }}]"
+        description: |
+          CONTAINER HIỆN TẠI ĐANG TẮT........
+        timestamp: "Thời gian bắt đầu xảy ra {{ $value }}"
+        
+    - alert: Container ĐÃ TẮT
+      expr: time() - container_last_seen > 60
+      for: 0m
+      labels:
+        severity: critical
+        category: service
+        app_type: test service dead
+      annotations:
+        description: |
+          A container is down for 30s
+          Value = {{ $value }}
+          Container Name = {{ $labels.name }}
+        title: Container down (instance {{ $labels.instance }})
+
+    - alert: Container Exited !!! HUY Alert
+      expr: container_state_status{status="exited"} == 1
+      for: 1m
+      labels:
+        severity: critical
+        category: service
+        app_type: service die
+      annotations:
+        description: |
+          A container is down
+          Container Name = {{ $labels.name }}
+        # severity="critical",
+        # alertname="Container Exited !!! HUY Alert",
+        # instance="{{ $labels.instance }}",
+        # instance_type="{{ label_replace(instance, "instance_type", "$1", "instance", "(.*)-[0-9]+") }}"
+        
+

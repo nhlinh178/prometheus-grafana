@@ -1,0 +1,15 @@
+groups:
+  - name: Container's Port
+    rules:
+
+    - alert: Port Container Down
+      expr: probe_success{job="Check_Port_Container"} == 0
+      labels:
+        severity: critical
+        app_type: Port
+      annotations:
+        description: |-
+          Node memory is filling up (< 10% left)
+            VALUE = {{ $value }}
+            LABELS = {{ $labels }}
+        summary: Host out of memory (instance {{ $labels.instance }})

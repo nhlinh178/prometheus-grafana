@@ -1,0 +1,93 @@
+groups:
+  - name: Bệnh Viện E-Rules
+    rules:
+
+      # Node Down
+      - alert: Cảnh Báo Server
+        expr:  up{job="Benh-Vien-E",instance=~".+"} == 0
+        for: 1m
+        labels:
+          severity: Khẩn cấp
+          app_type: Bệnh Viện E
+          category: server
+          instance: "{{ $labels.instance }}"
+        annotations:
+          summary: "Node-export trên server {{ $labels.instance }} bị tắt"
+          description: | 
+            Vui lòng kiểm tra lại service giám sát trên server, kiểm lại VPN site to site hoặc kiểm tra server có bị tắt hay không ?
+
+      # Ram Rules
+      - alert: Cảnh báo RAM
+        expr: (node_memory_MemTotal_bytes{job="Benh-Vien-E", instance=~".+"} - node_memory_MemFree_bytes{job="Benh-Vien-E", instance=~".+"} - node_memory_Buffers_bytes{job="Benh-Vien-E", instance=~".+"} - node_memory_Cached_bytes{job="Benh-Vien-E", instance=~".+"} ) / (node_memory_MemTotal_bytes{job="Benh-Vien-E", instance=~".+"}) * 100 > 96
+        for: 1m
+        labels:
+          severity: Khẩn cấp
+          app_type: Bệnh Viện E
+          category: memory
+          instance: "{{ $labels.instance }}"
+        annotations:
+          summary: "RAM Server > 95%"
+          description: |
+            RAM đã sử dụng chiếm {{ printf "%.2f" $value }}% / 100%
+
+            Thông Tin Cụ Thể:
+
+                 * TOTAL RAM: {{ query (printf "node_memory_MemTotal_bytes{job='Benh-Vien-E', instance=~'%s'}" $labels.instance) | first | value  | humanize1024}}
+
+                 * Ram sử dụng: {{ query (printf "node_memory_MemTotal_bytes{job='Benh-Vien-E', instance=~'%s'} - node_memory_MemFree_bytes{job='Benh-Vien-E', instance=~'%s'} - node_memory_Cached_bytes{job='Benh-Vien-E', instance=~'%s'} - node_memory_Buffers_bytes{job='Benh-Vien-E', instance=~'%s'}" $labels.instance $labels.instance $labels.instance $labels.instance) | first | value | humanize1024 }}
+                                   
+                 * Ram Cache/buffe: {{ query (printf "node_memory_Cached_bytes{job='Benh-Vien-E', instance=~'%s'} + node_memory_Buffers_bytes{job='Benh-Vien-E', instance=~'%s'}" $labels.instance $labels.instance) | first | value  | humanize1024}}
+
+                 * Ram còn lại:  {{ query (printf "node_memory_MemFree_bytes{job='Benh-Vien-E', instance=~'%s'}" $labels.instance) | first | value | humanize1024 }}
+
+      # CPU Rules
+      - alert: CPU Tăng cao
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{job="Benh-Vien-E", instance=~".+",mode="idle"}[1m])) * 100) > 96
+        for: 1m
+        labels:
+          severity: Khẩn cấp
+          app_type: Bệnh Viện E
+          category: cpu
+          instance: "{{ $labels.instance }}"
+        annotations:
+          summary: "CPU Server > 95%"
+          description: | 
+            CPU máy chủ sử dụng đạt tới  {{ printf "%.2f" $value }}% / 100%
+
+      # Disk Rules
+      - alert: Dung lượng DISK
+        expr: (100 - ((node_filesystem_free_bytes{instance=~".+",job="Benh-Vien-E",mountpoint=~".+"}) / (node_filesystem_size_bytes{instance=~".+",job="Benh-Vien-E",mountpoint=~".+"}))* 100) > 95
+        for: 72h
+        labels:
+          severity: Khẩn cấp
+          app_type: Bệnh Viện E
+          category: disk
+        annotations:
+          summary: "Ổ CỨNG SẮP ĐẦY"
+          description: | 
+          
+              Dung lượng {{ $labels.device }} mount vào thư mục {{ $labels.mountpoint }} đã đạt tới {{ printf "%.2f" $value }}% / 100%
+
+              Thông Tin Cụ Thể:
+
+                  * TOTAL DISK:  {{ query (printf "node_filesystem_size_bytes{job='Benh-Vien-E', instance=~'%s', mountpoint=~'%s'}" $labels.instance $labels.mountpoint) | first | value | humanize1024}}
+
+                  * KL Đã dùng:  {{ query (printf "node_filesystem_size_bytes{job='Benh-Vien-E', instance=~'%s', mountpoint=~'%s'} - node_filesystem_free_bytes{job='Benh-Vien-E', instance=~'%s', mountpoint=~'%s'}" $labels.instance $labels.mountpoint $labels.instance $labels.mountpoint) | first | value | humanize1024}}
+
+                  * KL Còn lại:  {{ query (printf "node_filesystem_free_bytes{job='Benh-Vien-E', instance=~'%s', mountpoint=~'%s'}" $labels.instance $labels.mountpoint) | first | value | humanize1024}}
+
+              Vào fix đi anh em !
+
+      # DB access lock
+      - alert: Access Share Lock
+        # expr: pg_locks_count{job="Benh-Vien-E",datname="produce",mode="accesssharelock",instance="192.168.0.245:9187"} > 5000
+        expr: pg_locks_count{job="Benh-Vien-E",datname="produce",mode="accesssharelock",instance="192.168.0.245:9187"} != 0 and pg_locks_count{job="Benh-Vien-E",datname="produce",mode="accesssharelock",instance="192.168.0.245:9187"} > 5000
+        for: 10s
+        labels:
+          severity: Cảnh Báo
+          app_type: Bệnh Viện E
+          category: databases
+          instance: "{{ $labels.instance }}"
+        annotations:
+          summary: "Access Locks cao"
+          description: "Locks trên DB {{$labels.datname}} tại thời điểm này đang cao,có thể gây chậm Database"

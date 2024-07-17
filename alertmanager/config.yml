@@ -1,0 +1,3285 @@
+global:
+  resolve_timeout: 1m
+
+receivers:
+- name: System-Team
+  # webhook_configs:
+  # - url: 'http://10.0.0.13:9088/alert/-945958075'
+  #   send_resolved: true
+  telegram_configs:
+  - api_url: https://api.telegram.org
+    bot_token: 6612849064:AAGR795EyHyn278L0WRLeqiTyBuCWRRhjMg
+    chat_id: -998222571
+    #template: template.tmpl
+    disable_notifications: false
+    http_config:
+      follow_redirects: true
+    send_resolved: true
+    parse_mode: ""
+
+- name: System-Container
+  webhook_configs:
+  - url: 'http://10.0.0.13:9088/alert/-824908019'
+    send_resolved: true
+
+- name: Systems
+  telegram_configs:
+  - api_url: https://api.telegram.org
+    bot_token: 6588801252:AAFJD4d1WW0L36mS_HfRlzTBIy3B7KJkIvc
+    chat_id: -824908019
+    #template: template.tmpl
+    disable_notifications: false
+    http_config:
+      follow_redirects: true
+    send_resolved: true
+    parse_mode: ""
+
+- name: benhviene-telegram
+  webhook_configs:
+  - url: 'http://10.0.0.13:9087/alert/-944876422'
+
+- name: phongkham40-telegram
+  webhook_configs:
+  - url: 'http://10.0.0.13:9087/alert/-988783003'
+
+- name: nhidongthanhpho-telegram
+  webhook_configs:
+  - url: 'http://10.0.0.13:9087/alert/-901133248'
+
+- name: systems-team-private-bot
+  webhook_configs:
+  - url: 'http://10.0.0.13:9087/alert/-858234435'
+
+- name: dakhoathanhhoa-telegram
+  webhook_configs:
+  - url: 'http://10.0.0.13:9087/alert/-921182723'
+
+- name: daihocy-telegram
+  webhook_configs:
+  - url: 'http://10.0.0.13:9087/alert/-870297775'
+
+- name: allen-telegram
+  webhook_configs:
+  - url: 'http://10.0.0.13:9087/alert/-918887592'
+
+- name: saintpaul-telegram
+  webhook_configs:
+  - url: 'http://10.0.0.13:9087/alert/-999844035'
+
+- name: mediplus-telegram
+  webhook_configs:
+  - url: 'http://10.0.0.13:9087/alert/-866646704'
+
+- name: benhvienphoi-telegram
+  webhook_configs:
+  - url: 'http://10.0.0.13:9087/alert/-908574338'
+
+- name: trungtamtimmach-telegram
+  webhook_configs:
+  - url: 'http://10.0.0.13:9087/alert/-969060421'
+
+- name: ykhn-telegram
+  webhook_configs:
+  - url: 'http://10.0.0.13:9087/alert/-906386087'
+
+- name: bachmai-telegram
+  webhook_configs:
+  - url: 'http://10.0.0.13:9087/alert/-932865047'
+
+- name: ivirse-telegram
+  webhook_configs:
+  - url: 'http://10.0.0.13:9087/alert/-856704110'
+
+- name: ytcc-telegram
+  webhook_configs:
+  - url: 'http://10.0.0.13:9087/alert/-829088376'
+
+- name: isofhcare-telegram
+  webhook_configs:
+  - url: 'http://10.0.0.13:9087/alert/-987838747'
+
+# Group Dự phòng
+- name: systems-team-telegram
+  webhook_configs:
+  - url: 'http://10.0.0.13:9087/alert/-815609975'
+
+- name: systems-test-private-bot
+  webhook_configs:
+  - url: 'http://10.0.50.27:9087/alert/-999710731'
+
+# ========================================================================================= ROUTE ================================================================================================
+# ========================================================================================= ROUTE ================================================================================================
+# ========================================================================================= ROUTE ================================================================================================
+# ========================================================================================= ROUTE ================================================================================================
+
+route:
+  continue: false
+  group_by: ['job','severity','instance']
+  group_interval: 1m
+  group_wait: 5s
+  repeat_interval: 15m
+  receiver: systems-team-telegram
+
+  routes:
+  # - match:
+  #     app_type: Port
+  #   receiver: systems-team-private-bot
+
+  - match_re: 
+      app_type: (jenkins)
+    receiver: System-Team 
+    routes:
+# Jenkins group
+    - match:
+        app_type: jenkins
+        instance : 10.0.50.110:19100
+      receiver: systems-team-private-bot
+
+
+# templates:
+# - /etc/alertmanager/*.tmpl
+
+# route:
+#   receiver: 'slack'
+
+# receivers:
+#   - name: 'slack'
+#       slack_configs:
+#           - send_resolved: true
+#             username: '<username>'
+#             channel: '#<channel-name>'
+#             api_url: '<incomming-webhook-url>'
+
+##################### SERVER-NODE EXPORTER #######################
+##################### SERVER-NODE EXPORTER #######################
+##################### SERVER-NODE EXPORTER #######################
+##################### SERVER-NODE EXPORTER #######################
+##################### SERVER-NODE EXPORTER #######################
+##################### SERVER-NODE EXPORTER #######################
+
+    # Hệ Thống Y Tế Công Cộng
+  # - match_re:
+  #     app_type: (server)
+  #     receiver: System-Container
+  #   routes:
+
+  - match:
+      app_type: Y Tế Công Cộng
+      instance: 183.80.255.19:19105
+      category: server  
+    receiver: ytcc-telegram
+    group_wait: 10s
+
+        # Hệ Thống ivirse
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.17:9100
+      category: server  
+    receiver: ivirse-telegram
+    group_wait: 10s
+
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.44:9100
+      category: server  
+    receiver: ivirse-telegram
+    group_wait: 11s
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.57:9100
+      category: server  
+    receiver: ivirse-telegram
+    group_wait: 11s
+    
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.82:9100
+      category: server  
+    receiver: ivirse-telegram
+    group_wait: 11s
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.87:9100
+      category: server  
+    receiver: ivirse-telegram
+    group_wait: 11s
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.120:9100
+      category: server  
+    receiver: ivirse-telegram
+    group_wait: 11s
+    
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.175:9100
+      category: server  
+    receiver: ivirse-telegram
+    group_wait: 11s
+    
+  # Bệnh Viện Bạch Mai
+  - match:
+      app_type: Bệnh Viện Bạch Mai
+      instance: 10.0.1.34:19100
+      category: server  
+    receiver: bachmai-telegram
+    group_wait: 12s
+
+  # Y Khoa Hà Nội
+  - match:
+      app_type: Y Khoa Hà Nội
+      instance: 113.190.44.104:19100
+      category: server  
+    receiver: ykhn-telegram
+    group_wait: 12s
+
+  # Trung Tâm Tim Mạch Viện E
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.97:9100
+      category: server  
+    receiver: trungtamtimmach-telegram
+    group_wait: 12s
+
+  # - match:
+  #     app_type: Trung Tâm Tim Mạch
+  #     instance: 192.168.1.101:9100
+  #     category: server  
+  #   receiver: trungtamtimmach-telegram
+  #   group_wait: 12s
+
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.104:9100
+      category: server  
+    receiver: trungtamtimmach-telegram
+    group_wait: 12s
+
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.106:9100
+      category: server  
+    receiver: trungtamtimmach-telegram
+    group_wait: 12s
+
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.107:9100
+      category: server  
+    receiver: trungtamtimmach-telegram
+    group_wait: 12s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.223:9100
+      category: server  
+    receiver: trungtamtimmach-telegram
+    group_wait: 12s      
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.241:9100
+      category: server  
+    receiver: trungtamtimmach-telegram
+    group_wait: 12s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.242:9100
+      category: server  
+    receiver: trungtamtimmach-telegram
+    group_wait: 12s
+    
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.243:9100
+      category: server  
+    receiver: trungtamtimmach-telegram
+    group_wait: 12s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.250:9100
+      category: server  
+    receiver: trungtamtimmach-telegram
+    group_wait: 12s   
+
+  # Bệnh Viện Phổi
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.8:9100
+      category: server  
+    receiver: benhvienphoi-telegram
+    group_wait: 13s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.9:9100
+      category: server  
+    receiver: benhvienphoi-telegram
+    group_wait: 13s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.24:9100
+      category: server  
+    receiver: benhvienphoi-telegram
+    group_wait: 13s
+    
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.30:9100
+      category: server  
+    receiver: benhvienphoi-telegram
+    group_wait: 13s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.31:9100
+      category: server  
+    receiver: benhvienphoi-telegram
+    group_wait: 13s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.32:9100
+      category: server  
+    receiver: benhvienphoi-telegram
+    group_wait: 13s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.33:9100
+      category: server  
+    receiver: benhvienphoi-telegram
+    group_wait: 13s
+    
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.35:9100
+      category: server  
+    receiver: benhvienphoi-telegram
+    group_wait: 13s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.36:9100
+      category: server  
+    receiver: benhvienphoi-telegram
+    group_wait: 13s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.40:9100
+      category: server  
+    receiver: benhvienphoi-telegram
+    group_wait: 13s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.41:9100
+      category: server  
+    receiver: benhvienphoi-telegram
+    group_wait: 13s
+    
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.45:9100
+      category: server  
+    receiver: benhvienphoi-telegram
+    group_wait: 13s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.60:9100
+      category: server  
+    receiver: benhvienphoi-telegram
+    group_wait: 13s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.61:9100
+      category: server  
+    receiver: benhvienphoi-telegram
+    group_wait: 13s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.150:9100
+      category: server  
+    receiver: benhvienphoi-telegram
+    group_wait: 13s
+    
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.152:9100
+      category: server  
+    receiver: benhvienphoi-telegram
+    group_wait: 13s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.153:9100
+      category: server  
+    receiver: benhvienphoi-telegram
+    group_wait: 13s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.200:9100
+      category: server  
+    receiver: benhvienphoi-telegram
+    group_wait: 13s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.224:9100
+      category: server  
+    receiver: benhvienphoi-telegram
+    group_wait: 6s
+    
+  # Phòng Khám Mediplus
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.17:9100
+      category: server  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.81:9100
+      category: server  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.82:9100
+      category: server  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.83:9100
+      category: server  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.84:9100
+      category: server  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.85:9100
+      category: server  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.95:9100
+      category: server  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.96:9100
+      category: server  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  # Bệnh Viện Saint Paul
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.14:9100
+      category: server  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.15:9100
+      category: server  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.16:9100
+      category: server  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.17:9100
+      category: server  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.18:9100
+      category: server  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.19:9100
+      category: server  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.22:9100
+      category: server  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.23:9100
+      category: server  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.24:9100
+      category: server  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.28:9100
+      category: server  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.30:9100
+      category: server  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  # Doctor Allen
+  - match:
+      app_type: Doctor Allen
+      instance: 27.71.235.143:9100
+      category: server  
+    receiver: allen-telegram
+    group_wait: 1s
+  - match:
+      app_type: Doctor Allen
+      instance: 27.71.235.144:9100
+      category: server  
+    receiver: allen-telegram
+    group_wait: 1s
+  - match:
+      app_type: Doctor Allen
+      instance: 27.71.235.145:9100
+      category: server  
+    receiver: allen-telegram
+    group_wait: 1s
+  # Bệnh Viện Y
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.161:9100
+      category: server  
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.162:9100
+      category: server  
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.163:9100
+      category: server  
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.164:9100
+      category: server  
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.168:9100
+      category: server  
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.169:9100
+      category: server  
+    receiver: daihocy-telegram
+    group_wait: 1s
+    
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.173:9100
+      category: server  
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.174:9100
+      category: server  
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.175:9100
+      category: server  
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.180:9100
+      category: server  
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.182:9100
+      category: server  
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.184:9100
+      category: server  
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.190:9100
+      category: server  
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.192:9100
+      category: server  
+    receiver: daihocy-telegram
+    group_wait: 1s
+
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.197:9100
+      category: server  
+    receiver: daihocy-telegram
+    group_wait: 1s
+  # Bệnh Viện Đa khoa thanh hóa
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.152:9100
+      category: server  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.153:9100
+      category: server  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.154:9100
+      category: server  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+    
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.155:9100
+      category: server  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.156:9100
+      category: server  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+    
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.157:9100
+      category: server  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.158:9100
+      category: server  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+    
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.160:9100
+      category: server  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.199:9100
+      category: server  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+    
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.200:9100
+      category: server  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.202:9100
+      category: server  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.203:9100
+      category: server  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.210:9100
+      category: server  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  # Bệnh Viện Quân 110
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.55.11:9100
+      category: server  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.115.112:9100
+      category: server  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.115.89:9100
+      category: server  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.102.67:9100
+      category: server  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.115.110:9100
+      category: server  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.102.113:9100
+      category: server  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+        app_type: Bệnh Viện Quân Y 110
+        instance: 10.110.102.88:9100
+        category: server  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.102.109:9100
+      category: server  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  # Bệnh Viện E
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.238:9100
+      category: server  
+    receiver: benhviene-telegram
+    group_wait: 2s
+    
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.245:9100
+      category: server  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.244:9100
+      category: server  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.247:9100
+      category: server  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.242:9100
+      category: server  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.250:9100
+      category: server  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.251:9100
+      category: server  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  # PHòng Khám 40
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.230:19100
+      category: server  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+    
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.231:9100
+      category: server  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.234:19100
+      category: server  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.235:9100
+      category: server  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.52:19100
+      category: server  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.53:9100
+      category: server  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  # Nhi Đồng Thành Phố
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.38:9100
+      category: server  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 2s
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.40:9100
+      category: server  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 2s
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.41:9100
+      category: server  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 2s
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.42:9100
+      category: server  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 2s
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.43:9100
+      category: server  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 2s  
+ # Hệ Thống Isofhcare
+  - match:
+        app_type: Isofhcare
+        instance: 3.0.34.197:9100
+        category: server  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+
+  - match:
+        app_type: Isofhcare
+        instance: 13.213.154.221:9100
+        category: server  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  - match:
+        app_type: Isofhcare
+        instance: 13.215.174.69:9100
+        category: server  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  - match:
+        app_type: Isofhcare
+        instance: 54.151.146.66:9100
+        category: server  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  
+  - match:
+        app_type: Isofhcare
+        instance: 13.229.40.73:9100
+        category: server  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  - match:
+        app_type: Isofhcare
+        instance: 54.251.13.109:9100
+        category: server  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  - match:
+        app_type: Isofhcare
+        instance: 3.0.58.192:19100
+        category: server  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+#################### RAM #######################
+#################### RAM #######################
+#################### RAM #######################
+#################### RAM #######################
+#################### RAM #######################
+#################### RAM #######################
+  # Hệ Thống Y Tế Công Cộng
+  - match:
+      app_type: Y Tế Công Cộng
+      instance: 183.80.255.19:19105
+      category: memory  
+    receiver: ytcc-telegram
+    group_wait: 10s
+  # Hệ Thống ivirse
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.17:9100
+      category: memory  
+    receiver: ivirse-telegram
+    group_wait: 5s
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.44:9100
+      category: memory  
+    receiver: ivirse-telegram
+    group_wait: 5s
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.57:9100
+      category: memory  
+    receiver: ivirse-telegram
+    group_wait: 5s
+    
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.82:9100
+      category: memory  
+    receiver: ivirse-telegram
+    group_wait: 5s
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.87:9100
+      category: memory  
+    receiver: ivirse-telegram
+    group_wait: 5s
+  - match:
+      app_type: Bệnh Viện Bạch Mai
+      instance: 103.9.211.120:9100
+      category: memory  
+    receiver: ivirse-telegram
+    group_wait: 5s
+    
+  - match:
+      app_type: Bệnh Viện Bạch Mai
+      instance: 103.9.211.175:9100
+      category: memory  
+    receiver: ivirse-telegram
+    group_wait: 5s
+  # Bệnh Viện Bạch Mai
+  - match:
+      app_type: Bệnh Viện Bạch Mai
+      instance: 10.0.1.34:9100
+      category: memory  
+    receiver: bachmai-telegram
+    group_wait: 12s
+  # Y Khoa Hà Nội
+  - match:
+      app_type: Y Khoa Hà Nội
+      instance: 113.190.44.104:19100
+      category: memory  
+    receiver: ykhn-telegram
+    group_wait: 12s
+  # Trung Tâm Tim Mạch Viện E
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.97:9100
+      category: memory  
+    receiver: trungtamtimmach-telegram
+    group_wait: 12s
+  # - match:
+  #     app_type: Trung Tâm Tim Mạch
+  #     instance: 192.168.1.101:9100
+  #     category: memory  
+  #   receiver: trungtamtimmach-telegram
+  #   group_wait: 12s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.104:9100
+      category: memory  
+    receiver: trungtamtimmach-telegram
+    group_wait: 12s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.106:9100
+      category: memory  
+    receiver: trungtamtimmach-telegram
+    group_wait: 12s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.107:9100
+      category: memory  
+    receiver: trungtamtimmach-telegram
+    group_wait: 12s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.223:9100
+      category: memory  
+    receiver: trungtamtimmach-telegram
+    group_wait: 12s      
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.241:9100
+      category: memory  
+    receiver: trungtamtimmach-telegram
+    group_wait: 12s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.242:9100
+      category: memory  
+    receiver: trungtamtimmach-telegram
+    group_wait: 12s
+    
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.243:9100
+      category: memory  
+    receiver: trungtamtimmach-telegram
+    group_wait: 12s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.250:9100
+      category: memory  
+    receiver: trungtamtimmach-telegram
+    group_wait: 12s      
+# Bệnh Viện Phổi
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.8:9100
+      category: memory  
+    receiver: benhvienphoi-telegram
+    group_wait: 11s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.9:9100
+      category: memory  
+    receiver: benhvienphoi-telegram
+    group_wait: 11s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.24:9100
+      category: memory  
+    receiver: benhvienphoi-telegram
+    group_wait: 11s
+    
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.30:9100
+      category: memory  
+    receiver: benhvienphoi-telegram
+    group_wait: 11s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.31:9100
+      category: memory  
+    receiver: benhvienphoi-telegram
+    group_wait: 11s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.32:9100
+      category: memory  
+    receiver: benhvienphoi-telegram
+    group_wait: 11s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.33:9100
+      category: memory  
+    receiver: benhvienphoi-telegram
+    group_wait: 11s
+    
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.35:9100
+      category: memory  
+    receiver: benhvienphoi-telegram
+    group_wait: 11s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.36:9100
+      category: memory  
+    receiver: benhvienphoi-telegram
+    group_wait: 11s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.40:9100
+      category: memory  
+    receiver: benhvienphoi-telegram
+    group_wait: 11s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.41:9100
+      category: memory  
+    receiver: benhvienphoi-telegram
+    group_wait: 11s
+    
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.45:9100
+      category: memory  
+    receiver: benhvienphoi-telegram
+    group_wait: 11s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.60:9100
+      category: memory  
+    receiver: benhvienphoi-telegram
+    group_wait: 11s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.61:9100
+      category: memory  
+    receiver: benhvienphoi-telegram
+    group_wait: 20s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.150:9100
+      category: memory  
+    receiver: benhvienphoi-telegram
+    group_wait: 20s
+    
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.152:9100
+      category: memory  
+    receiver: benhvienphoi-telegram
+    group_wait: 20s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.153:9100
+      category: memory  
+    receiver: benhvienphoi-telegram
+    group_wait: 20s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.200:9100
+      category: memory  
+    receiver: benhvienphoi-telegram
+    group_wait: 20s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.224:9100
+      category: memory  
+    receiver: benhvienphoi-telegram
+    group_wait: 20s
+  # Phòng Khám Mediplus
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.17:9100
+      category: memory  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.81:9100
+      category: memory  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.82:9100
+      category: memory  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.83:9100
+      category: memory  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.84:9100
+      category: memory  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.85:9100
+      category: memory  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.95:9100
+      category: memory  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.96:9100
+      category: memory  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  # Bệnh Viện Saint Paul
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.14:9100
+      category: memory  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.15:9100
+      category: memory  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.16:9100
+      category: memory  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.17:9100
+      category: memory  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.18:9100
+      category: memory  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.19:9100
+      category: memory  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.22:9100
+      category: memory  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.23:9100
+      category: memory  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.24:9100
+      category: memory  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.28:9100
+      category: memory  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.30:9100
+      category: memory  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  # Doctor Allen
+  - match:
+      app_type: Doctor Allen
+      instance: 27.71.235.143:9100
+      category: memory  
+    receiver: allen-telegram
+    group_wait: 1s
+  - match:
+      app_type: Doctor Allen
+      instance: 27.71.235.144:9100
+      category: memory  
+    receiver: allen-telegram
+    group_wait: 1s
+  - match:
+      app_type: Doctor Allen
+      instance: 27.71.235.145:9100
+      category: memory  
+    receiver: allen-telegram
+    group_wait: 1s
+  # Bệnh Viện Đại Học Y
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.161:9100
+      category: memory
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.162:9100
+      category: memory
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.163:9100
+      category: memory
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.164:9100
+      category: memory
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.168:9100
+      category: memory
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.169:9100
+      category: memory
+    receiver: daihocy-telegram
+    group_wait: 1s
+    
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.173:9100
+      category: memory
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.174:9100
+      category: memory
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.175:9100
+      category: memory
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.180:9100
+      category: memory
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.182:9100
+      category: memory
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.184:9100
+      category: memory
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.190:9100
+      category: memory
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.192:9100
+      category: memory
+    receiver: daihocy-telegram
+    group_wait: 1s
+    
+    
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.197:9100
+      category: memory
+    receiver: daihocy-telegram
+    group_wait: 1s
+  # Bệnh Viện Đa khoa thanh hóa
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.152:9100
+      category: memory  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.153:9100
+      category: memory  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.154:9100
+      category: memory  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+    
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.155:9100
+      category: memory  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.156:9100
+      category: memory  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+    
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.157:9100
+      category: memory  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.158:9100
+      category: memory  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+    
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.160:9100
+      category: memory  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.199:9100
+      category: memory  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+    
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.200:9100
+      category: memory  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.202:9100
+      category: memory  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.203:9100
+      category: memory  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.210:9100
+      category: memory  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  # Bệnh Viện Quân 110
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.55.11:9100
+      category: memory  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.115.112:9100
+      category: memory  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.115.89:9100
+      category: memory  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.102.67:9100
+      category: memory  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.115.110:9100
+      category: memory  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.102.113:9100
+      category: memory  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.102.88:9100
+      category: memory  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.102.109:9100
+      category: memory  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  # Bệnh Viện E
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.238:9100
+      category: memory  
+    receiver: benhviene-telegram
+    group_wait: 2s
+    
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.245:9100
+      category: memory  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.244:9100
+      category: memory  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.247:9100
+      category: memory  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.242:9100
+      category: memory  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.250:9100
+      category: memory  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.251:9100
+      category: memory  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  # PHòng Khám 40
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.230:19100
+      category: memory  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+    
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.231:9100
+      category: memory  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.234:19100
+      category: memory  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.235:9100
+      category: memory  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.52:19100
+      category: memory  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.53:9100
+      category: memory  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  # Nhi Đồng Thành Phố
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.38:9100
+      category: memory  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 2s
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.40:9100
+      category: memory  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 2s
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.41:9100
+      category: memory  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 2s
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.42:9100
+      category: memory  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 2s
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.43:9100
+      category: memory  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 2s   
+  
+  #Hệ Thống Isofhcare
+  - match:
+        app_type: Isofhcare
+        instance: 3.0.34.197:9100
+        category: memory  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+
+  - match:
+        app_type: Isofhcare
+        instance: 13.213.154.221:9100
+        category: memory  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  - match:
+        app_type: Isofhcare
+        instance: 13.215.174.69:9100
+        category: memory  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  - match:
+        app_type: Isofhcare
+        instance: 54.151.146.66:9100
+        category: memory  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  
+  - match:
+        app_type: Isofhcare
+        instance: 13.229.40.73:9100
+        category: memory  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  - match:
+        app_type: Isofhcare
+        instance: 54.251.13.109:9100
+        category: memory  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  - match:
+        app_type: Isofhcare
+        instance: 3.0.58.192:19100
+        category: memory  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+################### CPU ##################################
+################### CPU ##################################
+################### CPU ##################################
+################### CPU ##################################
+################### CPU ##################################
+################### CPU ##################################
+################### CPU ##################################
+################### CPU ##################################
+################### CPU ##################################
+  # Hệ Thống Y Tế Công Cộng
+  - match:
+      app_type: Y Tế Công Cộng
+      instance: 183.80.255.19:19105
+      category: cpu  
+    receiver: ytcc-telegram
+    group_wait: 10s
+  # Hệ Thống ivirse
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.17:9100
+      category: cpu  
+    receiver: ivirse-telegram
+    group_wait: 7s
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.44:9100
+      category: cpu  
+    receiver: ivirse-telegram
+    group_wait: 7s
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.57:9100
+      category: cpu  
+    receiver: ivirse-telegram
+    group_wait: 7s
+    
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.82:9100
+      category: cpu  
+    receiver: ivirse-telegram
+    group_wait: 7s
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.87:9100
+      category: cpu  
+    receiver: ivirse-telegram
+    group_wait: 7s
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.120:9100
+      category: cpu  
+    receiver: ivirse-telegram
+    group_wait: 7s
+    
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.175:9100
+      category: cpu  
+    receiver: ivirse-telegram
+    group_wait: 7s
+  # Bệnh Viện Bạch Mai
+  - match:
+      app_type: Bệnh Viện Bạch Mai
+      instance: 10.0.1.34:19100
+      category: cpu  
+    receiver: bachmai-telegram
+    group_wait: 30s
+  # Y Khoa Hà Nội
+  - match:
+      app_type: Y Khoa Hà Nội
+      instance: 113.190.44.104:19100
+      category: cpu  
+    receiver: ykhn-telegram
+    group_wait: 30s
+  # Trung Tâm Tim Mạch Viện E
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.97:9100
+      category: cpu  
+    receiver: trungtamtimmach-telegram
+    group_wait: 30s
+  # - match:
+  #     app_type: Trung Tâm Tim Mạch
+  #     instance: 192.168.1.101:9100
+  #     category: cpu  
+  #   receiver: trungtamtimmach-telegram
+  #   group_wait: 30s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.104:9100
+      category: cpu  
+    receiver: trungtamtimmach-telegram
+    group_wait: 30s
+
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.106:9100
+      category: cpu  
+    receiver: trungtamtimmach-telegram
+    group_wait: 30s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.107:9100
+      category: cpu  
+    receiver: trungtamtimmach-telegram
+    group_wait: 30s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.223:9100
+      category: cpu  
+    receiver: trungtamtimmach-telegram
+    group_wait: 30s      
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.241:9100
+      category: cpu  
+    receiver: trungtamtimmach-telegram
+    group_wait: 30s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.242:9100
+      category: cpu  
+    receiver: trungtamtimmach-telegram
+    group_wait: 30s
+    
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.243:9100
+      category: cpu  
+    receiver: trungtamtimmach-telegram
+    group_wait: 30s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.250:9100
+      category: cpu  
+    receiver: trungtamtimmach-telegram
+    group_wait: 30s      
+ # ệnh Viện Phổi
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.8:9100
+      category: cpu  
+    receiver: benhvienphoi-telegram
+    group_wait: 25s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.9:9100
+      category: cpu  
+    receiver: benhvienphoi-telegram
+    group_wait: 25s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.24:9100
+      category: cpu  
+    receiver: benhvienphoi-telegram
+    group_wait: 25s
+    
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.30:9100
+      category: cpu  
+    receiver: benhvienphoi-telegram
+    group_wait: 25s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.31:9100
+      category: cpu  
+    receiver: benhvienphoi-telegram
+    group_wait: 25s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.32:9100
+      category: cpu  
+    receiver: benhvienphoi-telegram
+    group_wait: 25s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.33:9100
+      category: cpu  
+    receiver: benhvienphoi-telegram
+    group_wait: 25s
+    
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.35:9100
+      category: cpu  
+    receiver: benhvienphoi-telegram
+    group_wait: 25s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.36:9100
+      category: cpu  
+    receiver: benhvienphoi-telegram
+    group_wait: 25s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.40:9100
+      category: cpu  
+    receiver: benhvienphoi-telegram
+    group_wait: 25s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.41:9100
+      category: cpu  
+    receiver: benhvienphoi-telegram
+    group_wait: 25s
+    
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.45:9100
+      category: cpu  
+    receiver: benhvienphoi-telegram
+    group_wait: 25s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.60:9100
+      category: cpu  
+    receiver: benhvienphoi-telegram
+    group_wait: 25s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.61:9100
+      category: cpu  
+    receiver: benhvienphoi-telegram
+    group_wait: 25s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.150:9100
+      category: cpu  
+    receiver: benhvienphoi-telegram
+    group_wait: 25s
+    
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.152:9100
+      category: cpu  
+    receiver: benhvienphoi-telegram
+    group_wait: 25s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.153:9100
+      category: cpu  
+    receiver: benhvienphoi-telegram
+    group_wait: 20s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.200:9100
+      category: cpu  
+    receiver: benhvienphoi-telegram
+    group_wait: 20s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.224:9100
+      category: cpu  
+    receiver: benhvienphoi-telegram
+    group_wait: 20s
+    
+    # Phòng Khám Mediplus
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.17:9100
+      category: cpu  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.81:9100
+      category: cpu  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.82:9100
+      category: cpu  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.83:9100
+      category: cpu  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.84:9100
+      category: cpu  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.85:9100
+      category: cpu  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.95:9100
+      category: cpu  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.96:9100
+      category: cpu  
+    receiver: mediplus-telegram
+    group_wait: 1s
+
+    # Bệnh Viện Saint Paul
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.14:9100
+      category: cpu  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.15:9100
+      category: cpu  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.16:9100
+      category: cpu  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.17:9100
+      category: cpu  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.18:9100
+      category: cpu  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.19:9100
+      category: cpu  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.22:9100
+      category: cpu  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.23:9100
+      category: cpu  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.24:9100
+      category: cpu  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.28:9100
+      category: cpu  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.30:9100
+      category: cpu  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  # Doctor Allen
+  - match:
+      app_type: Doctor Allen
+      instance: 27.71.235.143:9100
+      category: cpu  
+    receiver: allen-telegram
+    group_wait: 1s
+  - match:
+      app_type: Doctor Allen
+      instance: 27.71.235.144:9100
+      category: cpu  
+    receiver: allen-telegram
+    group_wait: 1s
+  - match:
+      app_type: Doctor Allen
+      instance: 27.71.235.145:9100
+      category: cpu  
+    receiver: allen-telegram
+    group_wait: 1s
+  # Bệnh Viện Y
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.161:9100
+      category: cpu
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.162:9100
+      category: cpu
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.163:9100
+      category: cpu
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.164:9100
+      category: cpu
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.168:9100
+      category: cpu
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.169:9100
+      category: cpu
+    receiver: daihocy-telegram
+    group_wait: 1s
+    
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.173:9100
+      category: cpu
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.174:9100
+      category: cpu
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.175:9100
+      category: cpu
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.180:9100
+      category: cpu
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.182:9100
+      category: cpu
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.184:9100
+      category: cpu
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.190:9100
+      category: cpu
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.192:9100
+      category: cpu
+    receiver: daihocy-telegram
+    group_wait: 1s
+    
+    
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.197:9100
+      category: cpu
+    receiver: daihocy-telegram
+    group_wait: 1s
+  # Bệnh Viện Đa khoa thanh hóa
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.152:9100
+      category: cpu  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.153:9100
+      category: cpu  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.154:9100
+      category: cpu  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+    
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.155:9100
+      category: cpu  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.156:9100
+      category: cpu  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+    
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.157:9100
+      category: cpu  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.158:9100
+      category: cpu  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+    
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.160:9100
+      category: cpu  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.199:9100
+      category: cpu  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+    
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.200:9100
+      category: cpu  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.202:9100
+      category: cpu  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.203:9100
+      category: cpu  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.210:9100
+      category: cpu  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  # Bệnh Viện Quân 110
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.55.11:9100
+      category: cpu  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.115.112:9100
+      category: cpu  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.115.89:9100
+      category: cpu  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.102.67:9100
+      category: cpu  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.115.110:9100
+      category: cpu  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.102.113:9100
+      category: cpu  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.102.88:9100
+      category: cpu  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.102.109:9100
+      category: cpu  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  # Bệnh Viện E
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.238:9100
+      category: cpu  
+    receiver: benhviene-telegram
+    group_wait: 2s
+    
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.245:9100
+      category: cpu  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.244:9100
+      category: cpu  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.247:9100
+      category: cpu  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.242:9100
+      category: cpu  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.250:9100
+      category: cpu  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.251:9100
+      category: cpu  
+    receiver: benhviene-telegram
+    group_wait: 2s
+############ PHòng Khám 40
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.230:19100
+      category: cpu  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.231:9100
+      category: cpu  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.234:19100
+      category: cpu  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.235:9100
+      category: cpu  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.52:19100
+      category: cpu  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.53:9100
+      category: cpu  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  # Nhi Đồng Thành Phố
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.38:9100
+      category: cpu  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 1s
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.40:9100
+      category: cpu  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 1s
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.41:9100
+      category: cpu  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 1s
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.42:9100
+      category: cpu  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 1s
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.43:9100
+      category: cpu  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 1s
+  #Hệ Thống Isofhcare
+  - match:
+        app_type: Isofhcare
+        instance: 3.0.34.197:9100
+        category: cpu  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+
+  - match:
+        app_type: Isofhcare
+        instance: 13.213.154.221:9100
+        category: cpu  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  - match:
+        app_type: Isofhcare
+        instance: 13.215.174.69:9100
+        category: cpu  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  - match:
+        app_type: Isofhcare
+        instance: 54.151.146.66:9100
+        category: cpu  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  
+  - match:
+        app_type: Isofhcare
+        instance: 13.229.40.73:9100
+        category: cpu  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  - match:
+        app_type: Isofhcare
+        instance: 54.251.13.109:9100
+        category: cpu  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  - match:
+        app_type: Isofhcare
+        instance: 3.0.58.192:19100
+        category: cpu  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+################### DISK ##############################
+################### DISK ##############################
+################### DISK ##############################
+################### DISK ##############################
+################### DISK ##############################
+################### DISK ##############################
+  # Hệ Thống Y Tế Công Cộng
+  - match:
+      app_type: Y Tế Công Cộng
+      instance: 183.80.255.19:19105
+      category: disk  
+    receiver: ytcc-telegram
+    group_wait: 10s
+  # Hệ Thống ivirse
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.17:9100
+      category: disk  
+    receiver: ivirse-telegram
+    group_wait: 17s
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.44:9100
+      category: disk  
+    receiver: ivirse-telegram
+    group_wait: 17s
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.57:9100
+      category: disk  
+    receiver: ivirse-telegram
+    group_wait: 17s
+    
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.82:9100
+      category: disk  
+    receiver: ivirse-telegram
+    group_wait: 17s
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.87:9100
+      category: disk  
+    receiver: ivirse-telegram
+    group_wait: 17s
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.120:9100
+      category: disk  
+    receiver: ivirse-telegram
+    group_wait: 17s
+    
+  - match:
+      app_type: Ivirse Project
+      instance: 103.9.211.175:9100
+      category: disk  
+    receiver: ivirse-telegram
+    group_wait: 17s
+  # Bệnh Viện Bạch Mai
+  - match:
+      app_type: Bệnh Viện Bạch Mai
+      instance: 113.190.44.104:19100
+      category: disk  
+    receiver: bachmai-telegram
+    group_wait: 17s
+  # Y Khoa Hà Nội
+  - match:
+      app_type: Y Khoa Hà Nội
+      instance: 113.190.44.104:19100
+      category: disk  
+    receiver: ykhn-telegram
+    group_wait: 22s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.97:9100
+      category: disk  
+    receiver: trungtamtimmach-telegram
+    group_wait: 22s
+  # - match:
+  #     app_type: Trung Tâm Tim Mạch
+  #     instance: 192.168.1.101:9100
+  #     category: disk  
+  #   receiver: trungtamtimmach-telegram
+  #   group_wait: 22s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.104:9100
+      category: disk  
+    receiver: trungtamtimmach-telegram
+    group_wait: 22s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.106:9100
+      category: disk  
+    receiver: trungtamtimmach-telegram
+    group_wait: 22s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.107:9100
+      category: disk  
+    receiver: trungtamtimmach-telegram
+    group_wait: 22s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.223:9100
+      category: disk  
+    receiver: trungtamtimmach-telegram
+    group_wait: 22s      
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.241:9100
+      category: disk  
+    receiver: trungtamtimmach-telegram
+    group_wait: 22s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.242:9100
+      category: disk  
+    receiver: trungtamtimmach-telegram
+    group_wait: 22s
+    
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.243:9100
+      category: disk  
+    receiver: trungtamtimmach-telegram
+    group_wait: 22s
+  - match:
+      app_type: Trung Tâm Tim Mạch
+      instance: 192.168.1.250:9100
+      category: disk  
+    receiver: trungtamtimmach-telegram
+    group_wait: 22s      
+  #Bệnh Viện Phổi
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.8:9100
+      category: disk  
+    receiver: benhvienphoi-telegram
+    group_wait: 28s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.9:9100
+      category: disk  
+    receiver: benhvienphoi-telegram
+    group_wait: 28s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.24:9100
+      category: disk  
+    receiver: benhvienphoi-telegram
+    group_wait: 28s
+    
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.30:9100
+      category: disk  
+    receiver: benhvienphoi-telegram
+    group_wait: 28s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.31:9100
+      category: disk  
+    receiver: benhvienphoi-telegram
+    group_wait: 28s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.32:9100
+      category: disk  
+    receiver: benhvienphoi-telegram
+    group_wait: 28s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.33:9100
+      category: disk  
+    receiver: benhvienphoi-telegram
+    group_wait: 28s
+    
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.35:9100
+      category: disk  
+    receiver: benhvienphoi-telegram
+    group_wait: 28s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.36:9100
+      category: disk  
+    receiver: benhvienphoi-telegram
+    group_wait: 28s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.40:9100
+      category: disk  
+    receiver: benhvienphoi-telegram
+    group_wait: 28s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.41:9100
+      category: disk  
+    receiver: benhvienphoi-telegram
+    group_wait: 28s
+    
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.45:9100
+      category: disk  
+    receiver: benhvienphoi-telegram
+    group_wait: 28s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.60:9100
+      category: disk  
+    receiver: benhvienphoi-telegram
+    group_wait: 28s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.61:9100
+      category: disk  
+    receiver: benhvienphoi-telegram
+    group_wait: 28s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.150:9100
+      category: disk  
+    receiver: benhvienphoi-telegram
+    group_wait: 28s
+    
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.152:9100
+      category: disk  
+    receiver: benhvienphoi-telegram
+    group_wait: 28s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.153:9100
+      category: disk  
+    receiver: benhvienphoi-telegram
+    group_wait: 28s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.200:9100
+      category: disk  
+    receiver: benhvienphoi-telegram
+    group_wait: 28s
+  - match:
+      app_type: Bệnh Viện Phổi
+      instance: 10.0.30.224:9100
+      category: disk  
+    receiver: benhvienphoi-telegram
+    group_wait: 11s
+    # Phòng Khám Mediplus
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.17:9100
+      category: disk  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.81:9100
+      category: disk  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.82:9100
+      category: disk  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.83:9100
+      category: disk  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.84:9100
+      category: disk  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.85:9100
+      category: disk  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.95:9100
+      category: disk  
+    receiver: mediplus-telegram
+    group_wait: 1s
+  - match:
+      app_type: Mediplus
+      instance: 10.3.0.96:9100
+      category: disk  
+    receiver: mediplus-telegram
+    group_wait: 1s
+    # Bệnh Viện Saint Paul
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.14:9100
+      category: disk  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.15:9100
+      category: disk  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.16:9100
+      category: disk  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.17:9100
+      category: disk  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.18:9100
+      category: disk  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.19:9100
+      category: disk  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.22:9100
+      category: disk  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.23:9100
+      category: disk  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.24:9100
+      category: disk  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.28:9100
+      category: disk  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  - match:
+      app_type: Bệnh Viện Saint Paul
+      instance: 172.16.16.30:9100
+      category: disk  
+    receiver: saintpaul-telegram
+    group_wait: 1s
+  # Doctor Allen
+  - match:
+      app_type: Doctor Allen
+      instance: 27.71.235.143:9100
+      category: disk  
+    receiver: allen-telegram
+    group_wait: 1s
+  - match:
+      app_type: Doctor Allen
+      instance: 27.71.235.144:9100
+      category: disk  
+    receiver: allen-telegram
+    group_wait: 1s
+  - match:
+      app_type: Doctor Allen
+      instance: 27.71.235.145:9100
+      category: disk  
+    receiver: allen-telegram
+    group_wait: 1s
+  # Bệnh Viện E
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.238:9100
+      category: disk  
+    receiver: benhviene-telegram
+    group_wait: 2s
+    
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.245:9100
+      category: disk  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.244:9100
+      category: disk  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.247:9100
+      category: disk  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.242:9100
+      category: disk  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.250:9100
+      category: disk  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.251:9100
+      category: disk  
+    receiver: benhviene-telegram
+    group_wait: 2s
+  # PHòng Khám 40
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.230:19100
+      category: disk  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.231:9100
+      category: disk  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.234:19100
+      category: disk  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.235:9100
+      category: disk  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.52:19100
+      category: disk  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.53:9100
+      category: disk  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  # Nhi Đồng Thành Phố
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.38:9100
+      category: disk  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 1s
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.40:9100
+      category: disk  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 1s
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.41:9100
+      category: disk  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 1s
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.42:9100
+      category: disk  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 1s
+  - match:
+      app_type: Nhi Đồng Thành Phố
+      instance: 10.0.2.43:9100
+      category: disk  
+    receiver: nhidongthanhpho-telegram
+    group_wait: 1s
+#### Bệnh Viện Đa khoa thanh hóa
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.152:9100
+      category: disk  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.153:9100
+      category: disk  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.154:9100
+      category: disk  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+    
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.155:9100
+      category: disk  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.156:9100
+      category: disk  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+    
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.157:9100
+      category: disk  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.158:9100
+      category: disk  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+    
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.160:9100
+      category: disk  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.199:9100
+      category: disk  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+    
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.200:9100
+      category: disk  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.202:9100
+      category: disk  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.203:9100
+      category: disk  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Đa Khoa Thanh Hóa
+      instance: 192.168.18.210:9100
+      category: disk  
+    receiver: dakhoathanhhoa-telegram
+    group_wait: 3s
+  # Bệnh Viện Quân 110
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.55.11:9100
+      category: disk  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.115.112:9100
+      category: disk  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.115.89:9100
+      category: disk  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.102.67:9100
+      category: disk  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.115.110:9100
+      category: disk  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.102.113:9100
+      category: disk  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.102.88:9100
+      category: disk  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  - match:
+      app_type: Bệnh Viện Quân Y 110
+      instance: 10.110.102.109:9100
+      category: disk  
+    receiver: systems-team-private-bot
+    group_wait: 3s
+  # Bệnh Viện Y
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.161:9100
+      category: disk
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.162:9100
+      category: disk
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.163:9100
+      category: disk
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.164:9100
+      category: disk
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.168:9100
+      category: disk
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.169:9100
+      category: disk
+    receiver: daihocy-telegram
+    group_wait: 1s
+    
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.173:9100
+      category: disk
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.174:9100
+      category: disk
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.175:9100
+      category: disk
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.180:9100
+      category: disk
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.182:9100
+      category: disk
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.184:9100
+      category: disk
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.190:9100
+      category: disk
+    receiver: daihocy-telegram
+    group_wait: 1s
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.192:9100
+      category: disk
+    receiver: daihocy-telegram
+    group_wait: 1s
+    
+    
+  - match:
+      app_type: Đại Học Y
+      instance: 192.168.55.197:9100
+      category: disk
+    receiver: daihocy-telegram
+    group_wait: 1s
+  #Hệ Thống Isofhcare
+  - match:
+        app_type: Isofhcare
+        instance: 3.0.34.197:9100
+        category: disk  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+
+  - match:
+        app_type: Isofhcare
+        instance: 13.213.154.221:9100
+        category: disk  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  - match:
+        app_type: Isofhcare
+        instance: 13.215.174.69:9100
+        category: disk  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  - match:
+        app_type: Isofhcare
+        instance: 54.151.146.66:9100
+        category: disk  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  
+  - match:
+        app_type: Isofhcare
+        instance: 13.229.40.73:9100
+        category: disk  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  - match:
+        app_type: Isofhcare
+        instance: 54.251.13.109:9100
+        category: disk  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+  - match:
+        app_type: Isofhcare
+        instance: 3.0.58.192:19100
+        category: disk  
+    receiver: isofhcare-telegram
+    group_wait: 2s
+################### DATABASES ##############################
+################### DATABASES ##############################
+################### DATABASES ##############################
+################### DATABASES ##############################
+################### DATABASES ##############################
+################### DATABASES ##############################
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.53:9187
+      category: databases  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  - match:
+      app_type: Phòng Khám 40
+      instance: 192.168.10.52:9187
+      category: databases  
+    receiver: phongkham40-telegram
+    group_wait: 2s
+  - match:
+      app_type: Bệnh Viện E
+      instance: 192.168.0.245:9187
+      category: databases
+    receiver: benhviene-telegram
+    group_wait: 2s

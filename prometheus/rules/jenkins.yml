@@ -1,0 +1,101 @@
+groups:
+  - name: JENKINS
+    rules:
+
+    - alert: Node Exporter Down
+      expr: up{job="Jenkins",instance="10.0.0.131:19100"} == 0
+      for: 1m
+      labels:
+        severity: critical
+        app_type: jenkins
+        category: server
+      annotations:
+        summary: "Node Exporter in Bach Mai server is down"
+        description: "Node Exporter is down for more than 2 minutes"
+
+    - record: job:node_memory_Mem_bytes:available
+      expr: (node_memory_MemFree_bytes{job="Jenkins"} / node_memory_MemTotal_bytes{job="Jenkins"}) * 100
+    - alert: Memory Usage Above 60%
+      # expr: 60 < (100 - job:node_memory_Mem_bytes:available) < 75
+      expr: 40 < ((node_memory_MemFree_bytes{job="Jenkins"} / node_memory_MemTotal_bytes{job="Jenkins"}) * 100) < 45
+      for: 1m
+      labels:
+        severity: warning
+        app_type: jenkins
+        category: memory
+      annotations:
+        summary: "Memory usage is going high - above 60%"
+        description: |
+          HUY NG
+          Node memory for instance {{ $labels.instance }} has reached {{ $value }}%
+
+    - alert: Memory Usage Above 75%
+      # expr: (100 - job:node_memory_Mem_bytes:available) >= 75
+      expr: (node_memory_MemFree_bytes{job="Jenkins"} / node_memory_MemTotal_bytes{job="Jenkins"}) * 100 <= 25
+      for: 1m
+      labels:
+        severity: critical
+        app_type: jenkins
+        category: memory
+      annotations:
+        summary: "Memory usage is very HIGH - above 75% - 25% left"
+        description: |
+          HUY NG
+          RAM Memory is used {{ printf "%.2f" $value }}% on instance {{ $labels.instance }}..
+          Detail Information : 
+          * Used : {{ query (printf "node_memory_MemTotal_bytes{job='Jenkins', instance=~'%s'} - node_memory_MemFree_bytes{job='Jenkins', instance=~'%s'} - node_memory_Buffers_bytes{job='Jenkins', instance=~'%s'} - node_memory_Cached_bytes{job='Jenkins', instance=~'%s'}" $labels.instance $labels.instance $labels.instance $labels.instance) | first | value | humanize }}
+          * Left : {{ query (printf "node_memory_MemFree_bytes{job='Jenkins', instance=~'%s'}" $labels.instance) | first | value | humanize }}
+          * Total : {{ query (printf "node_memory_MemTotal_bytes{job='Jenkins', instance=~'%s'}" $labels.instance) | first | value | humanize }}
+
+    - alert: CPU Usage High
+      expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{job="Jenkins",mode="idle"}[1m])) * 100) > 80
+      for: 1m
+      labels:
+        severity: critical
+        app_type: jenkins
+        category: cpu
+      annotations:
+        summary: "CPU usage is HIGH"
+        description: |
+          HUY NG
+          CPU load for instance {{ $labels.instance }} has reached {{ $value }}%
+
+    - alert: CPU_0_High
+      expr: 100 - (avg by(instance, cpu) (irate(node_cpu_seconds_total{job="Jenkins",mode="idle", cpu="0"}[1m])) * 100) > 80
+      for: 1m
+      labels:
+        severity: critical
+        app_type: jenkins
+        category: cpu
+      annotations:
+        summary: "CPU_0 usage is HIGH"
+        description: |
+          HUY NG
+          CPU_0 load for instance {{ $labels.instance }} has reached {{ $value }}%
+
+    - alert: CPU_1_High
+      expr: 100 - (avg by(instance, cpu) (irate(node_cpu_seconds_total{job="Jenkins",mode="idle", cpu="1"}[1m])) * 100) > 80
+      for: 1m
+      labels:
+        severity: critical
+        app_type: jenkins
+        category: cpu
+      annotations:
+        summary: "CPU_1 usage is HIGH"
+        description: |
+          HUY NG
+          CPU_1 load for instance {{ $labels.instance }} has reached {{ $value }}%
+
+    - alert: Free Disk Space Less 10%
+      # expr: (sum by (instance) (node_filesystem_free_bytes{job="Jenkins"}) / sum by (instance) (node_filesystem_size_bytes{job="Jenkins"})) * 100 < 10
+      expr: ((node_filesystem_free_bytes{job="Jenkins"}) / (node_filesystem_size_bytes{job="Jenkins"})) * 100 <= 10
+      for: 1m
+      labels:
+        severity: warning
+        app_type: jenkins
+        category: disk
+      annotations:
+        summary: "Free disk space is running out - less than 10%"
+        description: |
+          HUY NG
+          Node disk is going to full (< 10% left)  Current free disk space is {{ printf "%.2f" $value }} GB
