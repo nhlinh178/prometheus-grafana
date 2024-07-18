@@ -16,7 +16,7 @@ services:
       - '--web.console.libraries=/usr/share/prometheus/console_libraries'
       - '--web.console.templates=/usr/share/prometheus/consoles'
       - '--web.enable-lifecycle'
-      - '--web.config.file=/etc/prometheus/web.yml'
+#      - '--web.config.file=/etc/prometheus/web.yml'
     ports:
       - 9090:9090
     links:
@@ -71,7 +71,7 @@ services:
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
-      - '--web.config.file=/etc/alertmanager/web.yml'
+  #    - '--web.config.file=/etc/alertmanager/web.yml'
 
   # cadvisor:
   #   image: gcr.io/cadvisor/cadvisor

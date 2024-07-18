@@ -1,3 +1,3 @@
-#https://bcrypt-generator.com/
-basic_auth_users:
-    admin: $2a$12$HdVsXeGz.eRt1fwOvFs3OesvV5R12DhqDbmRIxXUEptwWBPAspkey
+# #https://bcrypt-generator.com/
+# basic_auth_users:
+#     admin: $2a$12$HdVsXeGz.eRt1fwOvFs3OesvV5R12DhqDbmRIxXUEptwWBPAspkey
