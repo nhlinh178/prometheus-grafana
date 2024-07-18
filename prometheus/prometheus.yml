@@ -14,22 +14,22 @@ rule_files:
   - 'rules/Jenkins.yml'
   - 'rules/CheckDomainStatus.yml'
   - 'rules/CheckPortContainer.yml'
-  # - 'containers/DrAllen/DEAD/DrAllenServiceDead.yml'
+  - 'containers/DrAllen/DEAD/DrAllenServiceDead.yml'
   - "rules/NhiDongThanhPho.yml"
-  # - "rules/phongkham40.yml"
-  # - "rules/benhviene.yml"
+  - "rules/phongkham40.yml"
+  - "rules/benhviene.yml"
   - "rules/benhvienquany110.yml"
-  # - "rules/benhvienthanhhoa.yml"
-  # - "rules/daihocy.yml"
-  # - "rules/drallen.yml"
-  # - "rules/benhviensaintpaul.yml"
-  # - "rules/phongkhammediplus.yml"
-  # - "rules/trungtamtimmach.yml"
-  # - "rules/benhvienphoi.yml"
-  # - "rules/benhvienbachmai.yml"
-  # - "rules/phongkhamykhn.yml"
-  # - "rules/ivirse.yml"
-  # - "rules/isofhcare.yml"
+  - "rules/benhvienthanhhoa.yml"
+  - "rules/daihocy.yml"
+  - "rules/drallen.yml"
+  - "rules/benhviensaintpaul.yml"
+  - "rules/phongkhammediplus.yml"
+  - "rules/trungtamtimmach.yml"
+  - "rules/benhvienphoi.yml"
+  - "rules/benhvienbachmai.yml"
+  - "rules/phongkhamykhn.yml"
+  - "rules/ivirse.yml"
+  - "rules/isofhcare.yml"
 
 # alert
 alerting:
