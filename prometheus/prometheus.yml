@@ -11,25 +11,25 @@ global:
 
 # Load and evaluate rules in this file every 'evaluation_interval' seconds.
 rule_files:
-  - 'rules/Jenkins.yml'
-  - 'rules/CheckDomainStatus.yml'
-  - 'rules/CheckPortContainer.yml'
-  - 'containers/DrAllen/DEAD/DrAllenServiceDead.yml'
-  - "rules/NhiDongThanhPho.yml"
-  - "rules/phongkham40.yml"
-  - "rules/benhviene.yml"
-  - "rules/benhvienquany110.yml"
-  - "rules/benhvienthanhhoa.yml"
-  - "rules/daihocy.yml"
-  - "rules/drallen.yml"
-  - "rules/benhviensaintpaul.yml"
-  - "rules/phongkhammediplus.yml"
-  - "rules/trungtamtimmach.yml"
-  - "rules/benhvienphoi.yml"
-  - "rules/benhvienbachmai.yml"
-  - "rules/phongkhamykhn.yml"
-  - "rules/ivirse.yml"
-  - "rules/isofhcare.yml"
+  # - 'rules/Jenkins.yml'
+  # - 'rules/CheckDomainStatus.yml'
+  # - 'rules/CheckPortContainer.yml'
+  # - 'containers/DrAllen/DEAD/DrAllenServiceDead.yml'
+  # - "rules/NhiDongThanhPho.yml"
+  # - "rules/phongkham40.yml"
+  # - "rules/benhviene.yml"
+  # - "rules/benhvienquany110.yml"
+  # - "rules/benhvienthanhhoa.yml"
+  # - "rules/daihocy.yml"
+  # - "rules/drallen.yml"
+  # - "rules/benhviensaintpaul.yml"
+  # - "rules/phongkhammediplus.yml"
+  # - "rules/trungtamtimmach.yml"
+  # - "rules/benhvienphoi.yml"
+  # - "rules/benhvienbachmai.yml"
+  # - "rules/phongkhamykhn.yml"
+  # - "rules/ivirse.yml"
+  # - "rules/isofhcare.yml"
 
 # alert
 alerting:
@@ -75,7 +75,7 @@ scrape_configs:
           - 103.9.211.87:9100
           - 103.9.211.120:9100
           - 103.9.211.175:9100
-          - 103.9.211.108:9100
+          - 103.9.211.108:19100
 
   - job_name: 'Benh-Vien-Bach-Mai'
     scrape_interval: 5s
@@ -169,7 +169,6 @@ scrape_configs:
     static_configs:
       - targets:
         # Bệnh Viện Đại Học Y
-          - '192.168.55.161:9100'
           - '192.168.55.162:9100'
           - '192.168.55.163:9100'
           - '192.168.55.164:9100'
@@ -248,7 +247,7 @@ scrape_configs:
           - '10.0.30.152:9100'
           - '10.0.30.153:9100'
           - '10.0.30.200:9100'
-          - '10.0.30.224:9100'
+          - '10.0.30.224:19100'
 
   - job_name: 'Trung-Tam-Tim-Mach'
     scrape_interval: 5s
@@ -256,11 +255,7 @@ scrape_configs:
       - targets:
         # Trung Tâm Tim Mạch
           - '192.168.1.97:9100'
-          - '192.168.1.225:19100'
-          - '192.168.1.224:19100'
-          - '192.168.1.224:9187'
           - '192.168.1.104:9100'
-          - '192.168.1.106:9100'
           - '192.168.1.107:9100'
           - '192.168.1.223:9100'
           - '192.168.1.241:9100'
