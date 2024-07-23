@@ -30,7 +30,7 @@ rule_files:
   # - "rules/phongkhamykhn.yml"
   # - "rules/ivirse.yml"
   # - "rules/isofhcare.yml"
-
+   - "rules/isofhtest.yml"
 # alert
 alerting:
   alertmanagers:
@@ -49,6 +49,13 @@ scrape_configs:
       - targets:
         # Hệ Thống y tế công cộng
           - 183.80.255.19:19105
+
+- job_name: 'isofhtest'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        # server test
+          - 10.0.0.237:9100
 
   - job_name: 'isofh-care'
     scrape_interval: 5s

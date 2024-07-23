@@ -1,0 +1,79 @@
+groups:
+  - name: isofhtest-Rules
+    rules:
+
+      # Node Down
+      - alert: Cảnh Báo Server
+        expr:  up{job="isofhtest",instance=~".+"} == 0
+        for: 1m
+        labels:
+          severity: Khẩn cấp
+          app_type: isofhtest
+          category: server
+          instance: "{{ $labels.instance }}"
+        annotations:
+          summary: "Node-export trên server {{ $labels.instance }} bị tắt"
+          description: | 
+            Server tèo rồi ...
+
+      # Ram Rules
+      - alert: Cảnh báo RAM
+        expr: (node_memory_MemTotal_bytes{job="isofhtest", instance=~".+"} - node_memory_MemFree_bytes{job="Benh-Vien-Bach-Mai", instance=~".+"} - node_memory_Buffers_bytes{job="Benh-Vien-Bach-Mai", instance=~".+"} - node_memory_Cached_bytes{job="Benh-Vien-Bach-Mai", instance=~".+"} ) / (node_memory_MemTotal_bytes{job="Benh-Vien-Bach-Mai", instance=~".+"}) * 100 > 96
+        for: 1m
+        labels:
+          severity: Khẩn cấp
+          app_type: SV test
+          category: memory
+          instance: "{{ $labels.instance }}"
+        annotations:
+          summary: "RAM Server > 95%"
+          description: |
+            RAM đã sử dụng chiếm {{ printf "%.2f" $value }}% / 100%
+
+            Thông Tin Cụ Thể:
+
+                 * TOTAL RAM: {{ query (printf "node_memory_MemTotal_bytes{job='isofhtest', instance=~'%s'}" $labels.instance) | first | value  | humanize1024}}
+
+                 * Ram sử dụng: {{ query (printf "node_memory_MemTotal_bytes{job='isofhtest', instance=~'%s'} - node_memory_MemFree_bytes{job='Benh-Vien-Bach-Mai', instance=~'%s'} - node_memory_Cached_bytes{job='Benh-Vien-Bach-Mai', instance=~'%s'} - node_memory_Buffers_bytes{job='Benh-Vien-Bach-Mai', instance=~'%s'}" $labels.instance $labels.instance $labels.instance $labels.instance) | first | value | humanize1024 }}
+                                   
+                 * Ram Cache/buffe: {{ query (printf "node_memory_Cached_bytes{job='isofhtest', instance=~'%s'} + node_memory_Buffers_bytes{job='Benh-Vien-Bach-Mai', instance=~'%s'}" $labels.instance $labels.instance) | first | value  | humanize1024}}
+
+                 * Ram còn lại:  {{ query (printf "node_memory_MemFree_bytes{job='isofhtest', instance=~'%s'}" $labels.instance) | first | value | humanize1024 }}
+
+      # CPU Rules
+      - alert: CPU Tăng cao
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{job="isofhtest", instance=~".+",mode="idle"}[1m])) * 100) > 96
+        for: 1m
+        labels:
+          severity: Khẩn cấp
+          app_type: sv test
+          category: cpu
+          instance: "{{ $labels.instance }}"
+        annotations:
+          summary: "CPU Server > 95%"
+          description: | 
+            CPU máy chủ sử dụng đạt tới  {{ printf "%.2f" $value }}% / 100%
+
+      # Disk Rules
+      - alert: Dung lượng DISK
+        expr: (100 - ((node_filesystem_free_bytes{instance=~".+",job="isofhtest",mountpoint=~".+"}) / (node_filesystem_size_bytes{instance=~".+",job="Benh-Vien-Bach-Mai",mountpoint=~".+"}))* 100) > 95
+        for: 72h
+        labels:
+          severity: Khẩn cấp
+          app_type: svtest
+          category: disk
+        annotations:
+          summary: "Ổ CỨNG SẮP ĐẦY"
+          description: | 
+          
+              Dung lượng {{ $labels.device }} mount vào thư mục {{ $labels.mountpoint }} đã đạt tới {{ printf "%.2f" $value }}% / 100%
+
+              Thông Tin Cụ Thể:
+
+                  * TOTAL DISK:  {{ query (printf "node_filesystem_size_bytes{job='isofhtest', instance=~'%s', mountpoint=~'%s'}" $labels.instance $labels.mountpoint) | first | value | humanize1024}}
+
+                  * KL Đã dùng:  {{ query (printf "node_filesystem_size_bytes{job='isofhtest', instance=~'%s', mountpoint=~'%s'} - node_filesystem_free_bytes{job='Benh-Vien-Bach-Mai', instance=~'%s', mountpoint=~'%s'}" $labels.instance $labels.mountpoint $labels.instance $labels.mountpoint) | first | value | humanize1024}}
+
+                  * KL Còn lại:  {{ query (printf "node_filesystem_free_bytes{job='isofhtest', instance=~'%s', mountpoint=~'%s'}" $labels.instance $labels.mountpoint) | first | value | humanize1024}}
+
+              Chạy đi anh em !
