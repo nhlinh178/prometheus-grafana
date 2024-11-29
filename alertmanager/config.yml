@@ -3,7 +3,7 @@ global:
 templates:
   - 'template.tmpl'
 receivers:
-  - name: 'project-telegram'
+  - name: 'prometheus-telegram'
     telegram_configs:
       - api_url: https://api.telegram.org
         bot_token: '7018285945:AAHitDvGR_Ojk9ED50yV3IpwGRFGPas1Xdk'
@@ -40,13 +40,13 @@ route:
   group_interval: 1m
   group_wait: 5s
   repeat_interval: 5m
-  receiver: "project-telegram"
+  receiver: "prometheus-telegram"
 
   routes:
     - match:
-        job: project
+        job: node_exporter
         instance: ipserver:9100
         alert_group: node_alert  
-      receiver: project-telegram
+      receiver: prometheus-telegram
       group_wait: 2s
   
