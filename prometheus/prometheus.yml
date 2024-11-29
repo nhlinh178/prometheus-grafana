@@ -24,25 +24,11 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       - targets:
-        #YDHN
           - 10.17.2.12:19100
-          # - 10.0.38.21:9100
-          # - 10.0.38.22:9100
-          # - 10.0.38.23:9100
-          # - 10.0.38.24:9100
 
-#   - job_name: 'Container-YDHN'
-#     scrape_interval: 5s
-#     static_configs:
-#       - targets:
-#         # YDHN
-#           - 10.0.38.25:9092
-#           - 10.0.38.21:9092
-#           - 10.0.38.22:9092
-#           - 10.0.38.23:9092
-#           - 10.0.38.24:9092
-# #          - 10.0.38.25:19092
-#           - 10.0.38.21:19092
-#           - 10.0.38.22:19092
-#           - 10.0.38.23:19092
-#           - 10.0.38.24:19092
+  - job_name: 'Container'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+          - 10.17.2.12:9092
+
