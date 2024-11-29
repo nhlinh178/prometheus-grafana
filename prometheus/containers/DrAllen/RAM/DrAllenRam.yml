@@ -1,0 +1,18 @@
+groups:
+  - name: Container Memory For Dr Allen Server
+    rules:
+
+    - alert: Redis Container Memory
+      # expr: container_memory_usage_bytes{name="redis-server"} < 1.5e+10
+      expr: container_memory_usage_bytes{name="redis-server",instance="10.0.0.55:11092"}
+      for: 1m
+      labels:
+        severity: critical
+        app_type: dr-allen-memory
+        category: memory
+      annotations:
+        summary: "Memory of REDIS container is high on {{ $labels.instance }} for more than 1 minutes"
+        description: |
+          HUY NG
+          Memory of REDIS container is USED => [ {{ query (printf "container_memory_usage_bytes{name='redis-server',instance=~'%s'}"   $labels.instance) | first | value | humanize}} ]
+

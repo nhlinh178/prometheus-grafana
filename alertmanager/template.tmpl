@@ -1,0 +1,77 @@
+{{ define "my_alert_template" }}
+{{if eq .Status "resolved"}}
+✅💙PHỤC HỒI💙✅
+------------------------------------------------------
+Nội dung: {{.CommonAnnotations.summary}}
+Nhóm: {{ .CommonLabels.alertname }}
+Máy Chủ: {{ .CommonLabels.instance }}
+Status:  {{ .Status  | toUpper}}
+------------------------------------------------------
+{{end -}}
+
+{{if eq .Status "firing"}}
+🔥🚨CẢNH BÁO SỰ CỐ🚨🔥
+------------------------------------------------------
+Nội dung: {{.CommonAnnotations.summary}}
+Nhóm: {{ .CommonLabels.alertname }}
+Máy Chủ: {{ .CommonLabels.instance }}
+Thông tin: {{.CommonAnnotations.description}}
+Mức Độ:  🔥 {{ .CommonLabels.severity | toUpper }} 🔥
+
+------------------------------------------------------
+{{- range $val := .Alerts }}
+THỜI GIAN XẢY RA: {{ $val.StartsAt }}
+{{- end }}
+{{ end }}
+{{ end }}
+
+{{ define "blackbox_alert" }}
+{{if eq .Status "resolved"}}
+✅PHỤC HỒI✅
+------------------------------------------------------
+Nội dung: {{.CommonAnnotations.summary}}
+Nhóm: {{ .CommonLabels.alertname }}
+Status:  {{ .Status  | toUpper}}
+------------------------------------------------------
+{{end -}}
+
+{{if eq .Status "firing"}}
+❌🚨CẢNH BÁO SỰ CỐ🚨❌
+------------------------------------------------------
+Nội dung: {{.CommonAnnotations.summary}}
+Nhóm: {{ .CommonLabels.alertname }}
+Thông tin: {{.CommonAnnotations.description}}
+Mức Độ:  ❌ {{ .CommonLabels.severity | toUpper }} ❌
+
+------------------------------------------------------
+{{- range $val := .Alerts }}
+THỜI GIAN XẢY RA: {{ $val.StartsAt }}
+{{- end }}
+{{ end }}
+{{ end }}
+
+{{ define "cadvisor-alert" }}
+{{ range .Alerts }} 
+{{ if eq .Status "resolved" }}
+✅💙PHỤC HỒI💙✅
+------------------------------------------------------
+Nội dung: {{ .Annotations.summary }}
+Nhóm: {{ .Labels.alertname }}
+Máy Chủ: {{ .Labels.instance }}
+Container: {{ .Labels.name }}
+Status:  {{ .Status | toUpper }}
+------------------------------------------------------
+{{ end -}}
+ 
+{{ if eq .Status "firing" }}
+🔥🚨CẢNH BÁO SỰ CỐ🚨🔥
+------------------------------------------------------
+Nội dung: {{ .Annotations.summary }}
+Nhóm: {{ .Labels.alertname }}
+Thông tin: {{ .Annotations.description }}
+Mức Độ:  🔥 {{ .Labels.severity | toUpper }} 🔥
+------------------------------------------------------
+THỜI GIAN XẢY RA: {{ .StartsAt }}
+{{- end }}
+{{ end }}
+{{ end }}

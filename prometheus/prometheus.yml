@@ -1,0 +1,48 @@
+# my global config
+global:
+  scrape_interval:     15s # By default, scrape targets every 15 seconds.
+  evaluation_interval: 15s # By default, scrape targets every 15 seconds.
+  # scrape_timeout is set to the global default (10s).
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+    monitor: 'Hospitals'
+
+# Load and evaluate rules in this file every 'evaluation_interval' seconds.
+rule_files:
+  - "rules/YDHN.yml"
+  - "rules/cadvisor-rules.yml"
+# alert
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+           - 10.17.2.12:9093
+scrape_configs:
+  - job_name: 'BV-YDHN'
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+        #YDHN
+          - 10.17.2.12:19100
+          # - 10.0.38.21:9100
+          # - 10.0.38.22:9100
+          # - 10.0.38.23:9100
+          # - 10.0.38.24:9100
+
+#   - job_name: 'Container-YDHN'
+#     scrape_interval: 5s
+#     static_configs:
+#       - targets:
+#         # YDHN
+#           - 10.0.38.25:9092
+#           - 10.0.38.21:9092
+#           - 10.0.38.22:9092
+#           - 10.0.38.23:9092
+#           - 10.0.38.24:9092
+# #          - 10.0.38.25:19092
+#           - 10.0.38.21:19092
+#           - 10.0.38.22:19092
+#           - 10.0.38.23:19092
+#           - 10.0.38.24:19092
