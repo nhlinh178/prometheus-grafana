@@ -11,7 +11,7 @@ global:
 
 # Load and evaluate rules in this file every 'evaluation_interval' seconds.
 rule_files:
-  - "rules/YDHN.yml"
+  - "rules/node-exporter-rules.yml"
   - "rules/cadvisor-rules.yml"
 # alert
 alerting:
