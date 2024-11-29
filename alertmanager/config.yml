@@ -3,11 +3,11 @@ global:
 templates:
   - 'template.tmpl'
 receivers:
-  - name: 'YDHN-telegram'
+  - name: 'project-telegram'
     telegram_configs:
       - api_url: https://api.telegram.org
         bot_token: '7018285945:AAHitDvGR_Ojk9ED50yV3IpwGRFGPas1Xdk'
-        chat_id: -4587875318
+        chat_id: -groupid
         message: '{{ template "my_alert_template" . }}'
         disable_notifications: false
         http_config:
@@ -18,8 +18,8 @@ receivers:
   - name: 'bot-container'
     telegram_configs:
     - api_url: https://api.telegram.org
-      bot_token: '6588801252:AAFJD4d1WW0L36mS_HfRlzTBIy3B7KJkIvc'
-      chat_id: -4587875318
+      bot_token: '7018285945:AAHitDvGR_Ojk9ED50yV3IpwGRFGPas1Xdk'
+      chat_id: -groupid
       message: '{{ template "cadvisor-alert" . }}'
       disable_notifications: false
       send_resolved: true
@@ -40,101 +40,13 @@ route:
   group_interval: 1m
   group_wait: 5s
   repeat_interval: 5m
-  receiver: "YDHN-telegram"
+  receiver: "project-telegram"
 
   routes:
     - match:
-        job: BV-YDHN
-        instance: 10.17.2.12:19100
+        job: project
+        instance: ipserver:9100
         alert_group: node_alert  
-      receiver: YDHN-telegram
+      receiver: project-telegram
       group_wait: 2s
-    # - match:
-    #     job: BV-YDHN
-    #     instance: 10.0.38.22:9100
-    #     alert_group: node_alert  
-    #   receiver: YDHN-telegram
-    #   group_wait: 2s
-    # - match:
-    #     job: BV-YDHN
-    #     instance: 10.0.38.23:9100
-    #     alert_group: node_alert  
-    #   receiver: YDHN-telegram
-    #   group_wait: 2s
-    # - match:
-    #     job: BV-YDHN
-    #     instance: 10.0.2.24:9100
-    #     alert_group: node_alert  
-    #   receiver: YDHN-telegram
-    #   group_wait: 2s
-    # - match:
-    #     job: BV-YDHN
-    #     instance: 10.0.38.25:9100
-    #     alert_group: node_alert  
-    #   receiver: YDHN-telegram
-    #   group_wait: 2s
-
-
-    # - match:
-    #     job: Container-YDHN
-    #     alert_group: cadvisor_alert
-    #     instance: 10.0.38.21:9092
-    #   receiver: bot-container
-    #   group_wait: 10s
-    # - match:
-    #     job: Container-YDHN
-    #     alert_group: cadvisor_alert
-    #     instance: 10.0.38.22:9092
-    #   receiver: bot-container
-    #   group_wait: 10s
-    # - match:
-    #     job: Container-YDHN
-    #     alert_group: cadvisor_alert
-    #     instance: 10.0.38.23:9092
-    #   receiver: bot-container
-    #   group_wait: 10s
-    # - match:
-    #     job: Container-YDHN
-    #     alert_group: cadvisor_alert
-    #     instance: 10.0.38.24:9092
-    #   receiver: bot-container
-    #   group_wait: 10s
-    # - match:
-    #     job: Container-YDHN
-    #     alert_group: cadvisor_alert
-    #     instance: 10.0.38.25:9092
-    #   receiver: bot-container
-    #   group_wait: 10s
-
-
-
-    # - match:
-    #     job: Container-YDHN
-    #     alert_group: cadvisor_alert
-    #     instance: 10.0.38.21:19092
-    #   receiver: bot-container
-    #   group_wait: 10s
-    # - match:
-    #     job: Container-YDHN
-    #     alert_group: cadvisor_alert
-    #     instance: 10.0.38.22:19092
-    #   receiver: bot-container
-    #   group_wait: 10s
-    # - match:
-    #     job: Container-YDHN
-    #     alert_group: cadvisor_alert
-    #     instance: 10.0.38.23:19092
-    #   receiver: bot-container
-    #   group_wait: 10s
-    # - match:
-    #     job: Container-YDHN
-    #     alert_group: cadvisor_alert
-    #     instance: 10.0.38.24:19092
-    #   receiver: bot-container
-    #   group_wait: 10s
-#    - match:
-#        job: Container-YDHN
-#        alert_group: cadvisor_alert
-#        instance: 10.0.38.25:19092
-#      receiver: bot-container
-#      group_wait: 10s
+  
