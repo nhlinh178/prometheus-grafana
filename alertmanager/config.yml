@@ -42,5 +42,13 @@ route:
   repeat_interval: 5m
   receiver: "prometheus-telegram"
 
+route:
+  continue: false
+  group_by: ['job', 'severity', 'instance', 'name']
+  group_interval: 1m
+  group_wait: 5s
+  repeat_interval: 5m
+  receiver: "bot-container"
+
 
   
