@@ -36,7 +36,7 @@ groups:
 
 
       - alert: CPU Container
-        expr: (sum(rate(container_cpu_usage_seconds_total{id=~"/docker/.*",job="Container-YDHN"}[1m])) by (name, instance) *100) > 9000
+        expr: (sum(rate(container_cpu_usage_seconds_total{id=~"/docker/.*",job="Cadvisor"}[1m])) by (name, instance) *100) > 9000
         for: 1m
         labels:
           severity: Khẩn cấp
