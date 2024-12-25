@@ -2,7 +2,7 @@ groups:
   - name: Alert_container
     rules:
       - alert: Container Down
-        expr: (container_state_status{status="exited", id=~"/docker/.*", job="Container-YDHN"} == 1 and (container_state_status{container_label_org_label_schema_name!=""} or container_state_status{container_label_com_docker_compose_version!=""} or container_state_status{container_label_org_opencontainers_image_version!=""})) or changes(container_start_time_seconds{id=~"/docker/.*",job="Container-YDHN"}[30s]) > 4
+        expr: (container_state_status{status="exited", id=~"/docker/.*", job="Cadvisor"} == 1 and (container_state_status{container_label_org_label_schema_name!=""} or container_state_status{container_label_com_docker_compose_version!=""} or container_state_status{container_label_org_opencontainers_image_version!=""})) or changes(container_start_time_seconds{id=~"/docker/.*",job="Container-YDHN"}[30s]) > 4
         for: 1m
         labels:
           severity: Khẩn cấp
@@ -17,7 +17,7 @@ groups:
                 Container {{ $labels.name }} trên máy {{ $labels.instance }} đã bị tắt! Vui lòng kiểm tra lại!!!!
 
       - alert: RAM Container
-        expr: (container_memory_working_set_bytes{id=~"/docker/.*",job="Container-YDHN"}) / (container_spec_memory_limit_bytes{id=~"/docker/.*",job="Container-YDHN"}) * 100 > 98 and (container_last_seen{container_label_org_label_schema_name!="",job="Container-YDHN"} or container_last_seen{ container_label_com_docker_compose_version!="",job="Container-YDHN"}) and ((container_memory_working_set_bytes{id=~"/docker/.*",job="Container-YDHN"}) / (container_spec_memory_limit_bytes{id=~"/docker/.*",job="Container-YDHN"}) * 100 <110)
+        expr: (container_memory_working_set_bytes{id=~"/docker/.*",job="Cadvisor"}) / (container_spec_memory_limit_bytes{id=~"/docker/.*",job="Cadvisor"}) * 100 > 98 and (container_last_seen{container_label_org_label_schema_name!="",job="Container-YDHN"} or container_last_seen{ container_label_com_docker_compose_version!="",job="Container-YDHN"}) and ((container_memory_working_set_bytes{id=~"/docker/.*",job="Container-YDHN"}) / (container_spec_memory_limit_bytes{id=~"/docker/.*",job="Container-YDHN"}) * 100 <110)
         for: 1m
         labels:
           severity: Khẩn cấp
