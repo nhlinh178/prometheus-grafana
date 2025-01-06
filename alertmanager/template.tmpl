@@ -20,7 +20,7 @@ Mức Độ:  🔥 {{ .CommonLabels.severity | toUpper }} 🔥
 
 ------------------------------------------------------
 {{- range $val := .Alerts }}
-THỜI GIAN XẢY RA: {{ $val.StartsAt }}
+THỜI GIAN XẢY RA: {{ $val.StartsAt.Local.Format "2006-01-02 15:04:05" }}
 {{- end }}
 {{ end }}
 {{ end }}
@@ -45,7 +45,7 @@ Mức Độ:  ❌ {{ .CommonLabels.severity | toUpper }} ❌
 
 ------------------------------------------------------
 {{- range $val := .Alerts }}
-THỜI GIAN XẢY RA: {{ $val.StartsAt }}
+THỜI GIAN XẢY RA: {{ $val.StartsAt.Local.Format "2006-01-02 15:04:05" }}
 {{- end }}
 {{ end }}
 {{ end }}
