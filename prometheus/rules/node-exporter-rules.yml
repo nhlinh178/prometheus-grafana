@@ -12,12 +12,12 @@ groups:
           category: server
           instance: "{{ $labels.instance }}"
         annotations:
-          summary: "Máy chủ {{ $labels.instance }} không phản hồi"
+          summary: "Server {{ $labels.instance }} not responding"
           description: | 
-                Máy chủ {{ $labels.instance }} không có phản hồi từ exporter trong vòng 5 phút. Có thể đã bị tắt hoặc mất kết nối mạng.
+                Server {{ $labels.instance }} has stopped responding for more than 1 minutes. Please check if the machine is powered off, network, unreachable, or if the exporter is down..
 
       # Ram Rules
-      - alert: Cảnh báo RAM
+      - alert: RAM Alert
         expr: (node_memory_MemTotal_bytes{job="node-exporter"} - node_memory_MemFree_bytes{job="node-exporter"} - node_memory_Buffers_bytes{job="node-exporter"} - node_memory_Cached_bytes{job="node-exporter"} ) / (node_memory_MemTotal_bytes{job="node-exporter"}) * 100 > 95
         for: 2m
         labels:
@@ -27,11 +27,11 @@ groups:
           category: server
           instance: "{{ $labels.instance }}"
         annotations:
-          summary: "RAM sử dụng cao trên {{ $labels.instance }}"
+          summary: "High memory usage on {{ $labels.instance }}"
           description: |
-            RAM đã sử dụng chiếm {{ printf "%.2f" $value }}% / 100%
+            RAM USED {{ printf "%.2f" $value }}% / 100%
 
-            Thông Tin Cụ Thể:
+            Infor:
 
                  * TOTAL RAM: {{ query (printf "node_memory_MemTotal_bytes{instance=~'%s', job='node-exporter'}" $labels.instance) | first | value  | humanize1024}}
 
@@ -52,9 +52,9 @@ groups:
           category: server
           instance: "{{ $labels.instance }}"
         annotations:
-          summary: "CPU sử dụng cao trên {{ $labels.instance }}"
+          summary: "High CPU usage on {{ $labels.instance }}"
           description: | 
-            CPU máy chủ {{ $labels.instance }} sử dụng đạt tới  {{ printf "%.2f" $value }}% / 100%
+            CPU server {{ $labels.instance }} used  {{ printf "%.2f" $value }}% / 100%
 
       # Disk Rules
       - alert: Dung lượng DISK
@@ -67,7 +67,7 @@ groups:
           category: server
           instance: "{{ $labels.instance }}"
         annotations:
-          summary: "Ổ CỨNG SẮP ĐẦY TRÊN {{ $labels.instance }} ({{ $labels.mountpoint }})"
+          summary: "HIGH DISK USAGE {{ $labels.instance }} ({{ $labels.mountpoint }})"
           description: | 
           
               Dung lượng {{ $labels.device }} mount vào thư mục {{ $labels.mountpoint }} đã đạt tới {{ printf "%.2f" $value }}% / 100%
