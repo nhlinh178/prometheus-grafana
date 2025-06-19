@@ -5,33 +5,33 @@ groups:
         expr: (container_state_status{status="exited", id=~"/docker/.*", job="Cadvisor"} == 1 and (container_state_status{container_label_org_label_schema_name!=""} or container_state_status{container_label_com_docker_compose_version!=""} or container_state_status{container_label_org_opencontainers_image_version!=""})) or changes(container_start_time_seconds{id=~"/docker/.*",job="Cadvisor"}[30s]) > 4
         for: 1m
         labels:
-          severity: Khẩn cấp
+          severity: Critical
           job: "{{ $labels.job }}"
           alert_group: cadvisor_alert
           category: container
           instance: "{{ $labels.instance }}"
         annotations:
-          summary: "Container bị tắt"
+          summary: "Container {{ $labels.name }} on server {{ $labels.instance }} is not responding"
           description: | 
 
-                Container {{ $labels.name }} trên máy {{ $labels.instance }} đã bị tắt! Vui lòng kiểm tra lại!!!!
+                Container {{ $labels.name }} on server {{ $labels.instance }} It may be stopped or crashed.
 
       - alert: RAM Container
         expr: (container_memory_working_set_bytes{id=~"/docker/.*",job="Cadvisor"}) / (container_spec_memory_limit_bytes{id=~"/docker/.*",job="Cadvisor"}) * 100 > 98 and (container_last_seen{container_label_org_label_schema_name!="",job="Cadvisor"} or container_last_seen{ container_label_com_docker_compose_version!="",job="Cadvisor"}) and ((container_memory_working_set_bytes{id=~"/docker/.*",job="Cadvisor"}) / (container_spec_memory_limit_bytes{id=~"/docker/.*",job="Cadvisor"}) * 100 <110)
         for: 1m
         labels:
-          severity: Khẩn cấp
+          severity: Warning
           job: "{{ $labels.job }}"
           alert_group: cadvisor_alert
           category: container
           instance: "{{ $labels.instance }}"
         annotations:
-          summary: "RAM container quá 90%"
+          summary: "High memory usage in container {{ $labels.name }} on server {{ $labels.instance }}"
           description: | 
 
                 CONTAINER NAME: {{ $labels.name }}
                 HOST: {{ $labels.instance }}
-                Thông tin cụ thể:
+                Infor :
                                 RAM USED: {{ $value | printf "%.2f" }}% / 100%
 
 
@@ -39,16 +39,16 @@ groups:
         expr: (sum(rate(container_cpu_usage_seconds_total{id=~"/docker/.*",job="Cadvisor"}[1m])) by (name, instance) *100) > 9000
         for: 1m
         labels:
-          severity: Khẩn cấp
+          severity: Warning
           job: "{{ $labels.job }}"
           alert_group: cadvisor_alert
           category: container
           instance: "{{ $labels.instance }}"
         annotations:
-          summary: "CPU container quá 9 Cores"
+          summary: "High CPU usage in container {{ $labels.name }} on server {{ $labels.instance }}"
           description: | 
 
                 CONTAINER NAME: {{ $labels.name }}
                 HOST: {{ $labels.instance }}
-                Thông tin cụ thể:
+                Infor:
                                 CPU USED : {{ $value | printf "%.2f" }}%
