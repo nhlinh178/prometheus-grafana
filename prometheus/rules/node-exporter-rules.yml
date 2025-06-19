@@ -6,28 +6,28 @@ groups:
         expr: up{job="node-exporter"} == 0
         for: 1m
         labels:
-          severity: Khẩn cấp
+          severity: Critical
           job: "{{ $labels.job }}"
           alert_group: node_alert
           category: server
           instance: "{{ $labels.instance }}"
         annotations:
-          summary: "Server bị tắt"
+          summary: "Máy chủ {{ $labels.instance }} không phản hồi"
           description: | 
-                Vui lòng kiểm tra lại service giám sát trên server, kiểm lại VPN site to site hoặc kiểm tra server có bị tắt hay không ?
+                Máy chủ {{ $labels.instance }} không có phản hồi từ exporter trong vòng 5 phút. Có thể đã bị tắt hoặc mất kết nối mạng.
 
       # Ram Rules
       - alert: Cảnh báo RAM
         expr: (node_memory_MemTotal_bytes{job="node-exporter"} - node_memory_MemFree_bytes{job="node-exporter"} - node_memory_Buffers_bytes{job="node-exporter"} - node_memory_Cached_bytes{job="node-exporter"} ) / (node_memory_MemTotal_bytes{job="node-exporter"}) * 100 > 95
-        for: 1m
+        for: 2m
         labels:
-          severity: Khẩn cấp
+          severity: Warning
           job: "{{ $labels.job }}"
           alert_group: node_alert
           category: server
           instance: "{{ $labels.instance }}"
         annotations:
-          summary: "RAM Server > 95%"
+          summary: "RAM sử dụng cao trên {{ $labels.instance }}"
           description: |
             RAM đã sử dụng chiếm {{ printf "%.2f" $value }}% / 100%
 
@@ -44,30 +44,30 @@ groups:
       # CPU Rules
       - alert: CPU Tăng cao
         expr: 100 - (avg by(instance,job) (irate(node_cpu_seconds_total{instance=~".+", job="node-exporter", mode="idle"}[1m])) * 100) > 95
-        for: 1m
+        for: 2m
         labels:
-          severity: Khẩn cấp
+          severity: Warning
           job: "{{ $labels.job }}"
           alert_group: node_alert
           category: server
           instance: "{{ $labels.instance }}"
         annotations:
-          summary: "CPU Server > 95%"
+          summary: "CPU sử dụng cao trên {{ $labels.instance }}"
           description: | 
-            CPU máy chủ sử dụng đạt tới  {{ printf "%.2f" $value }}% / 100%
+            CPU máy chủ {{ $labels.instance }} sử dụng đạt tới  {{ printf "%.2f" $value }}% / 100%
 
       # Disk Rules
       - alert: Dung lượng DISK
         expr: (100 - ((node_filesystem_free_bytes{instance=~".+", job="node-exporter", mountpoint=~".+"}) / (node_filesystem_size_bytes{instance=~".+", job="node-exporter", mountpoint=~".+"}))* 100) > 90
         for: 2h
         labels:
-          severity: Khẩn cấp
+          severity: Warning
           job: "{{ $labels.job }}"
           alert_group: node_alert
           category: server
           instance: "{{ $labels.instance }}"
         annotations:
-          summary: "Ổ CỨNG SẮP ĐẦY TRÊN {{ $labels.instance }}"
+          summary: "Ổ CỨNG SẮP ĐẦY TRÊN {{ $labels.instance }} ({{ $labels.mountpoint }})"
           description: | 
           
               Dung lượng {{ $labels.device }} mount vào thư mục {{ $labels.mountpoint }} đã đạt tới {{ printf "%.2f" $value }}% / 100%
@@ -79,5 +79,18 @@ groups:
                   * KL Đã dùng:  {{ query (printf "node_filesystem_size_bytes{instance=~'%s', job='node-exporter', mountpoint=~'%s'} - node_filesystem_free_bytes{instance=~'%s', job='node-exporter', mountpoint=~'%s'}" $labels.instance $labels.mountpoint $labels.instance $labels.mountpoint) | first | value | humanize1024}}
 
                   * KL Còn lại:  {{ query (printf "node_filesystem_free_bytes{instance=~'%s', job='node-exporter', mountpoint=~'%s'}" $labels.instance $labels.mountpoint) | first | value | humanize1024}}
-
-              Vào fix đi anh em!
+# IO DISK
+      - alert: Cảnh báo IO Disk
+        expr: 100 * max by(instance) ( rate(node_disk_io_time_seconds_total{device=~"sd.*"}[5m])) > 95
+        for: 1m
+        labels:
+          severity: Khẩn cấp
+          job: "{{ $labels.job }}"
+          alert_group: node_alert
+          category: server
+          instance: "{{ $labels.instance }}"
+        annotations:
+          summary: "High disk I/O detected on {{ $labels.instance }}"
+          description: |
+            Disk I/O usage on {{ $labels.instance }} has exceeded 95% over the last 5 minutes.
+            Current value {{ printf "%.2f" $value }}%.
