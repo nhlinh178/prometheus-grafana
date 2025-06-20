@@ -1,0 +1,27 @@
+{
+  "@type": "MessageCard",
+  "@context": "http://schema.org/extensions",
+  "summary": "{{summary}}",
+  "themeColor": "{{color}}",
+  "title": "{{title}}",
+  "sections": [
+    {
+      "activityTitle": "**Severity:** {{severity}}",
+      "activitySubtitle": "**Started at:** {{startsAt}} (GMT+7)",
+      "text": {{{jsonText}}}
+    }
+  ],
+  "potentialAction": [
+    {
+      "@type": "OpenUri",
+      "name": "View details",
+      "targets": [
+        {
+          "os": "default",
+          "uri": "{{generatorURL}}"
+        }
+      ]
+    }
+  ]
+}
+
