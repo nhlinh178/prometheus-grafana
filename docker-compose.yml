@@ -54,4 +54,12 @@ services:
       - ./msteams/index.js:/app/index.js:ro
       - /etc/localtime:/etc/localtime:ro
     network_mode: host
-
+  blackbox-exporter:
+    image: prom/blackbox-exporter:latest
+    container_name: blackbox-exporter
+    ports:
+      - "9115:9115"
+    volumes:
+      - ./blackbox:/etc/blackbox/
+    command:
+      - '--config.file=/etc/blackbox/blackbox.yml'
