@@ -40,19 +40,11 @@ function formatAdaptiveCard(alert) {
     "body": [
       {
         "type": "TextBlock",
-        "text": `\uD83D\uDEA8\uD83D\uDD25 CẢNH BÁO ${alert.annotations.summary} \uD83D\uDEA8\uD83D\uDD25`,
+        "text": `\uD83D\uDEA8\uD83D\uDD25 ALERT: ${alert.annotations.summary} \uD83D\uDEA8\uD83D\uDD25`,
         "weight": "Bolder",
         "size": "Large",
         "color": "Attention",
         "wrap": true
-      },
-      {
-        "type": "TextBlock",
-        "text": alert.annotations.summary || alert.labels.alertname || "Alert",
-        "wrap": true,
-        "color": "Warning",
-        "weight": "Bolder",
-        "size": "Medium"
       },
       {
         "type": "TextBlock",
@@ -73,13 +65,13 @@ function formatAdaptiveCard(alert) {
         ]
       }
     ],
-    "actions": alert.generatorURL ? [
-      {
-        "type": "Action.OpenUrl",
-        "title": "Xem chi tiết",
-        "url": alert.generatorURL
-      }
-    ] : []
+    // "actions": alert.generatorURL ? [
+    //   {
+    //     "type": "Action.OpenUrl",
+    //     "title": "Xem chi tiết",
+    //     "url": alert.generatorURL
+    //   }
+    // ] : []
   };
 }
 
@@ -104,6 +96,11 @@ function formatResolvedCard(alert) {
       },
       {
         "type": "TextBlock",
+        "text": `Status: ${alert.status.toUpperCase()}`,
+        "wrap": true
+      },
+      {
+        "type": "TextBlock",
         "text": alert.annotations.description || "",
         "wrap": true
       },
@@ -121,13 +118,13 @@ function formatResolvedCard(alert) {
         ]
       }
     ],
-    "actions": alert.generatorURL ? [
-      {
-        "type": "Action.OpenUrl",
-        "title": "Xem chi tiết",
-        "url": alert.generatorURL
-      }
-    ] : []
+    // "actions": alert.generatorURL ? [
+    //   {
+    //     "type": "Action.OpenUrl",
+    //     "title": "Xem chi tiết",
+    //     "url": alert.generatorURL
+    //   }
+    // ] : []
   };
 }
 
@@ -139,6 +136,7 @@ app.post('/alertmanager', async (req, res) => {
         const resolvedCard = formatResolvedCard(alert);
         await axios.post(TEAMS_WEBHOOK_URL, {
           type: "message",
+	        summary: `✅  RESOLVED ${alert.annotations.summary} ✅ `,
           attachments: [
             {
               contentType: "application/vnd.microsoft.card.adaptive",
@@ -150,6 +148,7 @@ app.post('/alertmanager', async (req, res) => {
         const card = formatAdaptiveCard(alert);
         await axios.post(TEAMS_WEBHOOK_URL, {
           type: "message",
+	        summary: `\uD83D\uDEA8\uD83D\uDD25 ALERT: ${alert.annotations.summary} \uD83D\uDEA8\uD83D\uDD25`,
           attachments: [
             {
               contentType: "application/vnd.microsoft.card.adaptive",
