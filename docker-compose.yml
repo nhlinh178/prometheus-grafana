@@ -44,5 +44,14 @@ services:
     network_mode: host
     depends_on:
       - prometheus
-
+  msteams:
+    image: nhlinh178/msteams-webhook:latest
+    container_name: msteams
+    user: 'root'
+    restart: always
+    volumes:
+      - ./msteams/config.json:/app/config.json:ro
+      - ./msteams/index.js:/app/index.js:ro
+      - /etc/localtime:/etc/localtime:ro
+    network_mode: host
 
