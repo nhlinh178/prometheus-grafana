@@ -61,5 +61,6 @@ services:
       - "9115:9115"
     volumes:
       - ./blackbox:/etc/blackbox/
+    network_mode: host
     command:
       - '--config.file=/etc/blackbox/blackbox.yml'
