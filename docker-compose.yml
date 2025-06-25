@@ -57,8 +57,6 @@ services:
   blackbox-exporter:
     image: prom/blackbox-exporter:latest
     container_name: blackbox-exporter
-    ports:
-      - "9115:9115"
     volumes:
       - ./blackbox:/etc/blackbox/
     network_mode: host
