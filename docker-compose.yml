@@ -67,7 +67,7 @@ services:
     container_name: loki
     restart: always
     network_mode: host
-    command: -config.file=/etc/loki/local-config.yaml
+    command: -config.file=/etc/loki/config.yaml
     volumes:
       - ./loki:/etc/loki
       - ./data-prometheus-grafana/loki_data:/loki
