@@ -65,11 +65,13 @@ services:
   loki:
     image: grafana/loki:latest
     container_name: loki
+    user: 'root'
     restart: always
     network_mode: host
-    command: -config.file=/etc/loki/config.yaml
+    command: 
+      - '--config.file=/etc/config/loki-config.yaml'
     volumes:
-      - ./loki:/etc/loki
+      - ./loki:/etc/config
       - ./data-prometheus-grafana/loki_data:/loki
       - /etc/localtime:/etc/localtime:ro
 
