@@ -1,0 +1,12 @@
+groups:
+  - name: example
+    rules:
+      - alert: HighErrorRate
+        expr: |
+          sum(rate({app="myapp"} |= "error" [1m])) by (job) > 0.5
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High error rate for job {{ $labels.job }}"
+          description: "More than 0.5 errors/sec for 2 minutes"
