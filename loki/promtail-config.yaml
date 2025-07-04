@@ -16,3 +16,12 @@ scrape_configs:
     labels:
       job: varlogs
       __path__: /var/log/secure
+pipeline_stages:
+  - regex:
+      expression: '^(?P<timestamp>\w+\s+\d+\s+\d+:\d+:\d+)\s+(?P<host>[^ ]+)\s+(?P<program>[^:]+):.*Accepted password for (?P<user>\w+) from (?P<ip>[\d.]+)'
+  - labels:
+      timestamp:
+      host:
+      program:
+      user:
+      ip
