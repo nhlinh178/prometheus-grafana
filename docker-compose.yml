@@ -72,6 +72,7 @@ services:
       - '--config.file=/etc/config/loki-config.yaml'
     volumes:
       - ./loki:/etc/config
+      - ./loki/rules:/loki/rules
       - ./data-prometheus-grafana/loki_data:/loki
       - /etc/localtime:/etc/localtime:ro
 
