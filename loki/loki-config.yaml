@@ -44,7 +44,14 @@ pattern_ingester:
     loki_address: localhost:3100
 
 ruler:
-  alertmanager_url: http://localhost:9093
+  enable_alertmanager_v2: true
+  enable_api: true
+  storage:
+    type: local
+    local:
+      directory: /loki/rules
+  rule_path: /loki/rules
+  alertmanager_url: http://10.0.0.167:9093  # địa chỉ của Alertmanager
 
 frontend:
   encoding: protobuf
