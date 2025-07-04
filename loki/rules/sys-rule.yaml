@@ -3,10 +3,11 @@ groups:
     rules:
       - alert: ssh login
         expr: |
-          count_over_time({job="varlogs"} |= `session opened` [1m]) > 0
+          count_over_time({job="varlogs", program="sshd"} |= "Accepted password" [1m]) by (user, ip, host) > 0
         for: 2m
         labels:
           severity: warning
         annotations:
-          summary: "Session ssh opened detected"
-          description: "More than 0.5 errors/sec for 2 minutes"
+          summary: "SSH login {{ $labels.host }}"
+          description: "User {{ $labels.user }} logged in from {{ $labels.ip }} to host {{ $labels.host }} at {{ $labels.timestamp }}"
+
