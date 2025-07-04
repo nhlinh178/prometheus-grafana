@@ -1,12 +1,12 @@
 groups:
-  - name: example
+  - name: system
     rules:
-      - alert: HighErrorRate
+      - alert: ssh login
         expr: |
-          sum(rate({app="myapp"} |= "error" [1m])) by (job) > 0.5
+          count_over_time({job="varlogs"} |= `session opened` [1m]) > 0
         for: 2m
         labels:
           severity: warning
         annotations:
-          summary: "High error rate for job {{ $labels.job }}"
+          summary: "Session ssh opened detected"
           description: "More than 0.5 errors/sec for 2 minutes"
