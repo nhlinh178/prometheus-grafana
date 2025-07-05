@@ -15,7 +15,7 @@ route:
 receivers:
   - name: 'msteams'
     webhook_configs:
-      - url: 'http://10.17.9.27:9089/alertmanager'
+      - url: 'http://msteams:9089/alertmanager'
         send_resolved: true
 
 inhibit_rules:
