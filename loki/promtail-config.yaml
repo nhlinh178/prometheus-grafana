@@ -24,4 +24,17 @@ pipeline_stages:
       host:
       program:
       user:
-      ip
+      ip:
+- job_name: DB
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: db
+      host: Test-02
+      __path__: /data/pg_data/pgsql/15/data/log/*.log
+  pipeline_stages:
+   - regex:
+      expression: 'FATAL: (?P<errmsg>.*)'
+   - labels:
+      errmsg: 
