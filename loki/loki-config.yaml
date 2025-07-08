@@ -51,7 +51,7 @@ ruler:
     local:
       directory: /loki/rules
   rule_path: /loki/rules
-  alertmanager_url: http://10.0.0.167:9093  # địa chỉ của Alertmanager
+  alertmanager_url: http://localhost:9093  # địa chỉ của Alertmanager
 
 frontend:
   encoding: protobuf
