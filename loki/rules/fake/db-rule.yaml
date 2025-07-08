@@ -1,1 +1,13 @@
+groups:
+  - name: db
+    rules:
+      - alert: db
+        expr: |
+          count_over_time({job="db"} |~ "(?i)FATAL" [1m]) > 0
+        for: 0m
+        labels:
+          severity: crital
+        annotations:
+          summary: "DB ERROR ON SERVER {{ $labels.host }}"
+          description: "FATA:{{ $labels.errmsg }}"
 
