@@ -3,11 +3,12 @@ groups:
     rules:
       - alert: SSHLogin
         expr: |
-          count_over_time({job="varlogs", program="sshd"} |= "Accepted password" [1m]) by (user, ip, host) > 0
-        for: 2m
+          count_over_time({job="varlogs"} |~ "(?i)Accepted password" [1m]) > 0
+        for: 0m
         labels:
           severity: warning
         annotations:
           summary: "SSH login on {{ $labels.host }}"
           description: "User {{ $labels.user }} logged in from {{ $labels.ip }} to host {{ $labels.host }}"
+
 
