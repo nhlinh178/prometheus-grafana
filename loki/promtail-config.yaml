@@ -11,30 +11,30 @@ clients:
 scrape_configs:
 - job_name: system
   static_configs:
-  - targets:
-      - localhost
-    labels:
-      job: varlogs
-      __path__: /var/log/secure
-pipeline_stages:
-  - regex:
-      expression: '^(?P<timestamp>\w+\s+\d+\s+\d+:\d+:\d+)\s+(?P<host>[^ ]+)\s+(?P<program>[^:]+):.*Accepted password for (?P<user>\w+) from (?P<ip>[\d.]+)'
-  - labels:
-      timestamp:
-      host:
-      program:
-      user:
-      ip:
+    - targets:
+        - localhost
+      labels:
+        job: varlogs
+        __path__: /var/log/secure
+  pipeline_stages:
+    - regex:
+        expression: '^(?P<timestamp>\w+\s+\d+\s+\d+:\d+:\d+)\s+(?P<host>[^ ]+)\s+(?P<program>[^:]+):.*Accepted password for (?P<user>\w+) from (?P<ip>[\d.]+)'
+    - labels:
+        timestamp:
+        host:
+        program:
+        user:
+        ip:
 - job_name: DB
   static_configs:
-  - targets:
-      - localhost
-    labels:
-      job: db
-      host: Test-02
-      __path__: /data/pg_data/pgsql/15/data/log/*.log
+    - targets:
+        - localhost
+      labels:
+        job: db
+        host: test
+        __path__: /var/lib/pgsql/11/data/log/postgresql_master_202.log
   pipeline_stages:
-   - regex:
-      expression: 'FATAL: (?P<errmsg>.*)'
-   - labels:
-      errmsg: 
+    - regex:
+        expression: 'FATAL: (?P<errmsg>.*)'
+    - labels:
+        errmsg:
